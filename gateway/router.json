@@ -1,0 +1,10 @@
+[
+    {
+        "path": "test",
+        "is_regex": "0",
+        "service": "trpc.test.service1.HelloWorldService",
+        "method": "trpc.test.service1.HelloWorldService/Hello",
+        "timeout": "1",
+        "protocol": "trpc"
+    }
+]
