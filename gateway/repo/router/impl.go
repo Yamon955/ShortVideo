@@ -31,12 +31,12 @@ type readerImpl struct {
 	regexRules atomic.Value
 }
 
-// init 初始化路由配置
-func init() {
+// Init 初始化路由配置
+func Init() error {
 	// Open the router.json file
 	jsonFile, err := os.Open("./router.json")
 	if err != nil {
-		log.Fatalf("open router.json failed, err:%v", err)
+		return err
 	}
 	defer jsonFile.Close()
 
@@ -62,6 +62,7 @@ func init() {
 	log.Debugf("parse router success, radix tree conf: %+v\n", tree.ToMap())
 	radixTree.Store(tree)
 	regexRuleConf.Store(regexRules)
+	return nil
 }
 
 func newReaderImpl() *readerImpl {
@@ -121,7 +122,7 @@ func parseRouter(node interface{}, path string, matchType int) (*entity.RouteCon
 		return nil, errs.New(entity.ErrGetRouteConfFromNode, "get routeConf from node err")
 	}
 	var calleeMethod string
-	switch matchType{
+	switch matchType {
 	case exactMatch:
 		calleeMethod = routeConf.Method
 	case longestPrefixMatch:
@@ -131,7 +132,8 @@ func parseRouter(node interface{}, path string, matchType int) (*entity.RouteCon
 		if len(res) == 0 {
 			return nil, errs.New(entity.ErrFindRouteConfFromRegex, "get routeConf from regexp err")
 		}
-		calleeMethod = res[len(res) - 1]
+		calleeMethod = res[len(res)-1]
+	default:
 	}
 	routeConf.CalleeMethod = calleeMethod
 	return routeConf, nil
