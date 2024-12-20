@@ -136,5 +136,6 @@ func parseRouter(node interface{}, path string, matchType int) (*entity.RouteCon
 	default:
 	}
 	routeConf.CalleeMethod = calleeMethod
+	log.Infof("match routeConf:%v", routeConf)
 	return routeConf, nil
 }
