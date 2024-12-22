@@ -1,0 +1,14 @@
+user_default_conf:
+  avator: "http://shortvideo.com/default.jpg"
+  sign: "刚来，请多关照～"
+  fans_count: 0
+  follows_count: 0
+
+mysql:
+  address: "localhost"
+  port: "3306"
+  user: "admin"
+  pwd: "123123"
+  db_name: "shortvideo"
+  max_open_conns: 200
+  max_idle_conns: 50
