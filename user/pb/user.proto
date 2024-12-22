@@ -1,0 +1,29 @@
+syntax = "proto3";
+package trpc.shortvideo.user;
+
+option go_package = "github.com/Yamon955/ShortVideo/user/pb";
+
+service User {
+    rpc Register(RegisterReq) returns (RegisterRsp);
+    rpc Login(LoginReq) returns (LoginRsp);
+}
+
+message RegisterReq {
+    string username = 1;
+    string password = 2;
+}
+message RegisterRsp {
+    int64 code = 1;
+    string msg = 2;
+}
+
+message LoginReq {
+    string username = 1;
+    string password = 2;
+}
+message LoginRsp {
+    int64 code = 1;
+    string msg = 2; 
+    uint64 uid = 3;
+    string token = 4;
+}
