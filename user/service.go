@@ -32,8 +32,13 @@ func (s *userSvrImpl) Register(ctx context.Context, req *pb.RegisterReq) (*pb.Re
 
 // Login 登录功能
 func (s *userSvrImpl) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginRsp, error) {
-
-	return nil, nil
+	rsp := &pb.LoginRsp{}
+	if err := s.authHandler.HandleLogin(ctx, req, rsp); err != nil {
+		formatLoginRsp(rsp, int64(errs.Code(err)), err.Error())
+		return rsp, err
+	}
+	formatLoginRsp(rsp, 0, "登录成功")
+	return rsp, nil
 }
 
 func formatRegisterRsp(rsp *pb.RegisterRsp, code int64, msg string) {
