@@ -80,7 +80,7 @@ func checkUsernameAndPassword(username string, password string) error {
 	return nil
 }
 
-
+// createUser 新建一个用户，使用默认配置初始化
 func createUser(username string, pwd string) *model.User {
 	return &model.User{
 		Username: username,
