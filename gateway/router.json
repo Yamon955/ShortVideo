@@ -1,0 +1,20 @@
+[
+    {
+        "path": "/test",
+        "is_regex": "0",
+        "service": "trpc.test.service1.HelloWorldService",
+        "method": "/trpc.test.service1.HelloWorldService/Hello",
+        "target": "ip://127.0.0.1:8080",
+        "timeout": "2s",
+        "protocol": "trpc"
+    },
+    {
+        "path": "/test/caculator",
+        "is_regex": "0",
+        "service": "trpc.test.caculator.Caculator",
+        "method": "/trpc.test.caculator.Caculator/Caculate",
+        "target": "ip://127.0.0.1:9000",
+        "timeout": "2s",
+        "protocol": "trpc"
+    }
+]
