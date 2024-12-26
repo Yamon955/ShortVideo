@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"time"
 
 	"github.com/Yamon955/ShortVideo/user/entity/conf"
 	"github.com/Yamon955/ShortVideo/user/entity/errcode"
@@ -96,5 +97,6 @@ func createUser(username string, pwd string) *model.User {
 		Sign:         conf.AppConf.Sign,
 		FansCount:    conf.AppConf.FansCount,
 		FollowsCount: conf.AppConf.FollowsCount,
+		RegisterTime: time.Now().Unix(),
 	}
 }

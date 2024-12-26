@@ -34,7 +34,7 @@ type readerImpl struct {
 // Init 初始化路由配置
 func Init() error {
 	// Open the router.json file
-	jsonFile, err := os.Open("./router.json")
+	jsonFile, err := os.Open("./conf/router.json")
 	if err != nil {
 		return err
 	}
