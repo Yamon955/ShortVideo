@@ -4,17 +4,17 @@ package trpc.shortvideo.user;
 option go_package = "github.com/Yamon955/ShortVideo/user/pb";
 
 message UserInfo {
-    optional uint64 ID = 1;            // uid
-    optional string username = 2;      // 用户名
-    optional string avator = 3;        // 头像
-    optional string sign = 4;          // 简介
-    optional int32 gender = 5;         // 性别 0-未知 1-男 2-女
-    optional int32 fans_count = 6;     // 粉丝数
-    optional int32 follows_count = 7;  // 关注数
-    optional int32 publish_count = 8;  // 发表作品数
-    optional int32 liked_count = 9;    // 点赞数
-    optional int32 collect_count = 10; // 收藏数
-    optional int64 register_time = 11; // 注册时间
+    uint64 ID = 1;            // uid
+    string username = 2;      // 用户名
+    string avator = 3;        // 头像
+    string sign = 4;          // 简介
+    int32 gender = 5;         // 性别 0-未知 1-男 2-女
+    int32 fans_count = 6;     // 粉丝数
+    int32 follows_count = 7;  // 关注数
+    int32 publish_count = 8;  // 发表作品数
+    int32 liked_count = 9;    // 点赞数
+    int32 collect_count = 10; // 收藏数
+    int64 register_time = 11; // 注册时间
 
 }
 
@@ -62,7 +62,7 @@ enum PROFILE_TYPES {
 message BatchGetProfileReq {
     repeated uint64 uid = 1;
     repeated PROFILE_TYPES profileTypes = 2;
-    optional bool disableCache = 3;
+    bool disableCache = 3;
 }
 message BatchGetProfileRsp {
     repeated UserInfo userInfos = 1;
@@ -70,11 +70,11 @@ message BatchGetProfileRsp {
 message SetProfileReq {
     uint64 uid = 1;
     repeated PROFILE_TYPES profileTypes = 2;
-    optional bool disableCache = 3;
-    optional string username = 4;      // 用户名
-    optional string avator = 5;        // 头像
-    optional string sign = 6;          // 简介
-    optional int32 gender = 7;         // 性别 0-未知 1-男 2-女
+    bool disableCache = 3;
+    string username = 4;      // 用户名
+    string avator = 5;        // 头像
+    string sign = 6;          // 简介
+    int32 gender = 7;         // 性别 0-未知 1-男 2-女
 
 }
 message SetProfileRsp {

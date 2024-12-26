@@ -22,6 +22,10 @@ type UserService interface {
 	Register(ctx context.Context, req *RegisterReq) (*RegisterRsp, error)
 
 	Login(ctx context.Context, req *LoginReq) (*LoginRsp, error)
+
+	BatchGetProfile(ctx context.Context, req *BatchGetProfileReq) (*BatchGetProfileRsp, error)
+
+	SetProfile(ctx context.Context, req *SetProfileReq) (*SetProfileRsp, error)
 }
 
 func UserService_Register_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
@@ -60,6 +64,42 @@ func UserService_Login_Handler(svr interface{}, ctx context.Context, f server.Fi
 	return rsp, nil
 }
 
+func UserService_BatchGetProfile_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &BatchGetProfileReq{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(UserService).BatchGetProfile(ctx, reqbody.(*BatchGetProfileReq))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func UserService_SetProfile_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &SetProfileReq{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(UserService).SetProfile(ctx, reqbody.(*SetProfileReq))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
 // UserServer_ServiceDesc descriptor for server.RegisterService.
 var UserServer_ServiceDesc = server.ServiceDesc{
 	ServiceName: "trpc.shortvideo.user.User",
@@ -72,6 +112,14 @@ var UserServer_ServiceDesc = server.ServiceDesc{
 		{
 			Name: "/trpc.shortvideo.user.User/Login",
 			Func: UserService_Login_Handler,
+		},
+		{
+			Name: "/trpc.shortvideo.user.User/BatchGetProfile",
+			Func: UserService_BatchGetProfile_Handler,
+		},
+		{
+			Name: "/trpc.shortvideo.user.User/SetProfile",
+			Func: UserService_SetProfile_Handler,
 		},
 	},
 }
@@ -93,6 +141,12 @@ func (s *UnimplementedUser) Register(ctx context.Context, req *RegisterReq) (*Re
 func (s *UnimplementedUser) Login(ctx context.Context, req *LoginReq) (*LoginRsp, error) {
 	return nil, errors.New("rpc Login of service User is not implemented")
 }
+func (s *UnimplementedUser) BatchGetProfile(ctx context.Context, req *BatchGetProfileReq) (*BatchGetProfileRsp, error) {
+	return nil, errors.New("rpc BatchGetProfile of service User is not implemented")
+}
+func (s *UnimplementedUser) SetProfile(ctx context.Context, req *SetProfileReq) (*SetProfileRsp, error) {
+	return nil, errors.New("rpc SetProfile of service User is not implemented")
+}
 
 // END --------------------------------- Default Unimplemented Server Service --------------------------------- END
 
@@ -105,6 +159,10 @@ type UserClientProxy interface {
 	Register(ctx context.Context, req *RegisterReq, opts ...client.Option) (rsp *RegisterRsp, err error)
 
 	Login(ctx context.Context, req *LoginReq, opts ...client.Option) (rsp *LoginRsp, err error)
+
+	BatchGetProfile(ctx context.Context, req *BatchGetProfileReq, opts ...client.Option) (rsp *BatchGetProfileRsp, err error)
+
+	SetProfile(ctx context.Context, req *SetProfileReq, opts ...client.Option) (rsp *SetProfileRsp, err error)
 }
 
 type UserClientProxyImpl struct {
@@ -150,6 +208,46 @@ func (c *UserClientProxyImpl) Login(ctx context.Context, req *LoginReq, opts ...
 	callopts = append(callopts, c.opts...)
 	callopts = append(callopts, opts...)
 	rsp := &LoginRsp{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *UserClientProxyImpl) BatchGetProfile(ctx context.Context, req *BatchGetProfileReq, opts ...client.Option) (*BatchGetProfileRsp, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/trpc.shortvideo.user.User/BatchGetProfile")
+	msg.WithCalleeServiceName(UserServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("shortvideo")
+	msg.WithCalleeServer("user")
+	msg.WithCalleeService("User")
+	msg.WithCalleeMethod("BatchGetProfile")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &BatchGetProfileRsp{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *UserClientProxyImpl) SetProfile(ctx context.Context, req *SetProfileReq, opts ...client.Option) (*SetProfileRsp, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/trpc.shortvideo.user.User/SetProfile")
+	msg.WithCalleeServiceName(UserServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("shortvideo")
+	msg.WithCalleeServer("user")
+	msg.WithCalleeService("User")
+	msg.WithCalleeMethod("SetProfile")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &SetProfileRsp{}
 	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
 		return nil, err
 	}
