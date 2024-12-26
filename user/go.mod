@@ -1,13 +1,15 @@
 module github.com/Yamon955/ShortVideo/user
 
-go 1.22.0
+go 1.20
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/stretchr/testify v1.9.0
 	trpc.group/trpc-go/trpc-go v1.0.3
 )
 
 require (
+	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/go-playground/form/v4 v4.2.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
@@ -15,6 +17,7 @@ require (
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.2 // indirect
+	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect

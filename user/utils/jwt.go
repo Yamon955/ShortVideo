@@ -6,6 +6,7 @@ import (
 	"github.com/Yamon955/ShortVideo/user/entity/errcode"
 	"github.com/dgrijalva/jwt-go"
 	"trpc.group/trpc-go/trpc-go/errs"
+	"trpc.group/trpc-go/trpc-go/log"
 )
 
 const (
@@ -29,7 +30,7 @@ func GenerateTokn(uid uint64, username string) (string, error) {
 			Subject:   "yamon",                                                               // 签发对象
 			Audience:  "sv_user",                                                             // 签发受众
 			ExpiresAt: time.Now().Add(time.Duration(DefaultExpireTime) * time.Minute).Unix(), // 过期时间
-			NotBefore: time.Now().Add(time.Second).Unix(),                                    // 最早使用时间
+			NotBefore: time.Now().Unix(),                                                     // 最早使用时间
 			IssuedAt:  time.Now().Unix(),                                                     // 签发时间
 		},
 	}
@@ -44,7 +45,8 @@ func ParseToken(tokenStr string) (*MyClaims, error) {
 		return []byte(SignKey), nil
 	})
 	if err != nil {
-		return nil, errs.New(errcode.ErrInvalidToken, "invalid token")
+		log.Errorf("ParseWithClaims failed, err:%v", err)
+		return nil, errs.New(errcode.ErrInvalidToken, "ParseWithClaims err")
 	}
 	if claims, ok := token.Claims.(*MyClaims); ok && token.Valid {
 		return claims, nil
