@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"time"
 
 	"github.com/Yamon955/ShortVideo/user/entity/conf"
 	"github.com/Yamon955/ShortVideo/user/entity/errcode"
@@ -14,7 +15,7 @@ import (
 	"trpc.group/trpc-go/trpc-go/log"
 )
 
-type authHandlerandlerImpl struct{
+type authHandlerandlerImpl struct {
 	db mysql.DBClient
 }
 
@@ -33,7 +34,7 @@ func (h *authHandlerandlerImpl) HandleRegister(ctx context.Context, req *pb.Regi
 	}
 	// 检查用户名是否被占用
 	user, err := h.db.FindUserByUsername(ctx, username)
-	if err != nil && err != gorm.ErrRecordNotFound{
+	if err != nil && err != gorm.ErrRecordNotFound {
 		log.ErrorContextf(ctx, "FindUserByUsername failed, err:%v", err)
 		return errs.New(errcode.ErrDBOperation, "数据库查询出错，请稍后重试！")
 	}
@@ -57,15 +58,22 @@ func (h *authHandlerandlerImpl) HandleLogin(ctx context.Context, req *pb.LoginRe
 	if err != nil {
 		log.ErrorContextf(ctx, "FindUserByUsername failed, err:%v", err)
 		if err == gorm.ErrRecordNotFound {
-			return errs.New(errcode.ErrUserNotRegister, "该用户未注册，请先进行注册！")
+			return errs.New(errcode.ErrUserNotRegister, "用户名不存在")
 		}
 		return errs.New(errcode.ErrDBOperation, "数据库查询出错，请稍后重试！")
 	}
 	if utils.Md5(req.Password) != user.Password {
-		return errs.New(errcode.ErrPasswordNotMatch, "输入的用户名和密码不匹配")
+		return errs.New(errcode.ErrPasswordNotMatch, "密码错误")
 	}
-	rsp.Uid = user.ID
-	rsp.Token = utils.GenerateTokn()
+	token, err := utils.GenerateTokn(user.ID, username)
+	if err != nil {
+		log.ErrorContextf(ctx, "GenerateTokn failed, err:%v", err)
+		return errs.New(errcode.ErrGenerateToekn, "token生成出错，请重新登录")
+	}
+	rsp = &pb.LoginRsp{
+		Uid:   user.ID,
+		Token: token,
+	}
 	return nil
 }
 
@@ -83,11 +91,12 @@ func checkUsernameAndPassword(username string, password string) error {
 // createUser 新建一个用户，使用默认配置初始化
 func createUser(username string, pwd string) *model.User {
 	return &model.User{
-		Username: username,
-		Password: utils.Md5(pwd),
-		Avatar: conf.AppConf.Avator,
-		Sign: conf.AppConf.Sign,
-		FansCount: conf.AppConf.FansCount,
+		Username:     username,
+		Password:     utils.Md5(pwd),
+		Avatar:       conf.AppConf.Avator,
+		Sign:         conf.AppConf.Sign,
+		FansCount:    conf.AppConf.FansCount,
 		FollowsCount: conf.AppConf.FollowsCount,
+		RegisterTime: time.Now().Unix(),
 	}
 }
