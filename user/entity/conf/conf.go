@@ -8,8 +8,8 @@ import (
 )
 
 type AppConfig struct {
-	*UserDefaultConfig `mapstructure:"user_default_conf"`
-	*MySQLConfig       `mapstructure:"mysql"`
+	UserDefaultConf *UserDefaultConfig `mapstructure:"user_default_conf"`
+	MySQLConf       *MySQLConfig       `mapstructure:"mysql"`
 }
 
 type UserDefaultConfig struct {

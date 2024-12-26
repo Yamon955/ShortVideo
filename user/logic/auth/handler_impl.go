@@ -15,16 +15,18 @@ import (
 	"trpc.group/trpc-go/trpc-go/log"
 )
 
-type authHandlerandlerImpl struct {
-	db mysql.DBClient
-}
-
 const (
 	maxLen = 24
 	minLen = 8
 )
 
-func (h *authHandlerandlerImpl) HandleRegister(ctx context.Context, req *pb.RegisterReq) error {
+// handlerImpl 用户注册、登录处理器实现
+type handlerImpl struct {
+	db mysql.DBClient
+}
+
+// HandleRegister 用户注册
+func (h *handlerImpl) HandleRegister(ctx context.Context, req *pb.RegisterReq) error {
 	username := req.GetUsername()
 	password := req.GetPassword()
 	// 检查用户名和密码是否合法
@@ -46,7 +48,8 @@ func (h *authHandlerandlerImpl) HandleRegister(ctx context.Context, req *pb.Regi
 	return nil
 }
 
-func (h *authHandlerandlerImpl) HandleLogin(ctx context.Context, req *pb.LoginReq, rsp *pb.LoginRsp) error {
+// HandleLogin 用户登录
+func (h *handlerImpl) HandleLogin(ctx context.Context, req *pb.LoginReq, rsp *pb.LoginRsp) error {
 	username := req.GetUsername()
 	password := req.GetPassword()
 	// 检查用户名和密码是否合法

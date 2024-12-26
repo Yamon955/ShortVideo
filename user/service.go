@@ -4,17 +4,20 @@ import (
 	"context"
 
 	"github.com/Yamon955/ShortVideo/user/logic/auth"
+	"github.com/Yamon955/ShortVideo/user/logic/profile"
 	"github.com/Yamon955/ShortVideo/user/pb"
 	"trpc.group/trpc-go/trpc-go/errs"
 )
 
-type userSvrImpl struct{
-	authHandler auth.AuthHandler
+type userSvrImpl struct {
+	authHandler    auth.Handler
+	profileHandler profile.Handler
 }
 
 func newUserSvr() *userSvrImpl {
 	return &userSvrImpl{
-		authHandler: auth.NewAuthHandler(),
+		authHandler:    auth.NewHandler(),
+		profileHandler: profile.NewHandler(),
 	}
 }
 
@@ -41,12 +44,24 @@ func (s *userSvrImpl) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginRsp
 	return rsp, nil
 }
 
+// BatchGetProfile 用户资料获取，支持批量方式
+func (s *userSvrImpl) BatchGetProfile(ctx context.Context, req *pb.BatchGetProfileReq) (*pb.BatchGetProfileRsp, error) {
+
+	return nil, nil
+}
+
+// SetProfile 用户资料修改
+func (s *userSvrImpl) SetProfile(ctx context.Context, req *pb.SetProfileReq) (*pb.SetProfileRsp, error) {
+
+	return nil, nil
+}
+
 func formatRegisterRsp(rsp *pb.RegisterRsp, code int64, msg string) {
 	rsp.Code = code
-	rsp.Msg  = msg
+	rsp.Msg = msg
 }
 
 func formatLoginRsp(rsp *pb.LoginRsp, code int64, msg string) {
 	rsp.Code = code
-	rsp.Msg  = msg
+	rsp.Msg = msg
 }
