@@ -17,7 +17,8 @@ var db *gorm.DB
 func Init() (err error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		conf.AppConf.MySQLConf.User, conf.AppConf.MySQLConf.Pwd, conf.AppConf.MySQLConf.Address,
-		conf.AppConf.MySQLConf.Port)
+		conf.AppConf.MySQLConf.Port, conf.AppConf.MySQLConf.DBName)
+	fmt.Println(dsn)
 	db, err = gorm.Open(mysql.New(mysql.Config{
 		DSN:                       dsn,
 		DefaultStringSize:         256,   // string 类型字段默认长度

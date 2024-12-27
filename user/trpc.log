@@ -1,0 +1,37 @@
+2024-12-27 10:47:25.741	INFO	conf/conf.go:44	app config:&{0xc00039e510 0xc000392180}
+2024-12-27 10:47:25.784	INFO	server/service.go:168	process:26097, trpc service:trpc.shortvideo.user.User launch success, tcp:0.0.0.0:20001, serving ...
+2024-12-27 11:15:59.293	ERROR	auth/handler_impl.go:62	FindUserByUsername failed, err:invalid value, should be pointer to struct or slice
+2024-12-27 11:15:59.296	ERROR	auth/handler_impl.go:62	FindUserByUsername failed, err:invalid value, should be pointer to struct or slice
+2024-12-27 11:44:33.527	INFO	conf/conf.go:44	app config:&{0xc0002a6510 0xc00029a180}
+2024-12-27 11:44:33.604	INFO	server/service.go:168	process:51304, trpc service:trpc.shortvideo.user.User launch success, tcp:0.0.0.0:20001, serving ...
+2024-12-27 11:45:04.258	ERROR	auth/handler_impl.go:62	FindUserByUsername failed, err:record not found
+2024-12-27 11:45:04.260	ERROR	auth/handler_impl.go:90	password[123456] is invalid
+2024-12-27 11:45:04.260	ERROR	auth/handler_impl.go:62	FindUserByUsername failed, err:record not found
+2024-12-27 11:45:38.216	ERROR	auth/handler_impl.go:62	FindUserByUsername failed, err:record not found
+2024-12-27 11:45:38.221	ERROR	auth/handler_impl.go:62	FindUserByUsername failed, err:record not found
+2024-12-27 11:49:21.056	INFO	conf/conf.go:44	app config:&{0xc0003360c0 0xc00007f260}
+2024-12-27 11:49:21.084	ERROR	server/service.go:145	process:53211 service:trpc.shortvideo.user.User ListenAndServe fail:get tcp listener err: listen tcp 0.0.0.0:20001: bind: address already in use
+2024-12-27 11:49:21.388	INFO	admin/admin.go:192	process:53211, admin server, closed
+2024-12-27 11:49:21.389	ERROR	server/serve_unix.go:82	service serve errors: 1 error occurred:
+	* get tcp listener err: listen tcp 0.0.0.0:20001: bind: address already in use
+
+
+Note: it is normal to have "use of closed network connection" error during hot restart.
+DO NOT panic.
+2024-12-27 11:49:49.180	INFO	conf/conf.go:44	app config:&{0xc0003360c0 0xc00007f260}
+2024-12-27 11:49:49.201	INFO	server/service.go:168	process:53487, trpc service:trpc.shortvideo.user.User launch success, tcp:0.0.0.0:20001, serving ...
+2024-12-27 11:50:02.521	ERROR	auth/handler_impl.go:65	FindUserByUsername failed, err:record not found
+2024-12-27 11:55:59.996	INFO	conf/conf.go:44	app config:&{0xc0003340c0 0xc00007f260}
+2024-12-27 11:56:00.026	INFO	server/service.go:168	process:56537, trpc service:trpc.shortvideo.user.User launch success, tcp:0.0.0.0:20001, serving ...
+2024-12-27 11:57:26.381	INFO	conf/conf.go:44	app config:&{0xc0003380c0 0xc00007f260}
+2024-12-27 11:57:26.404	INFO	server/service.go:168	process:57117, trpc service:trpc.shortvideo.user.User launch success, tcp:0.0.0.0:20001, serving ...
+2024-12-27 11:59:56.158	INFO	conf/conf.go:44	app config:&{0xc00041e510 0xc000412180}
+2024-12-27 11:59:56.186	INFO	server/service.go:168	process:58201, trpc service:trpc.shortvideo.user.User launch success, tcp:0.0.0.0:20001, serving ...
+2024-12-27 12:01:22.987	INFO	conf/conf.go:44	app config:&{0xc0002fe0c0 0xc00013b200}
+2024-12-27 12:01:23.014	INFO	server/service.go:168	process:58984, trpc service:trpc.shortvideo.user.User launch success, tcp:0.0.0.0:20001, serving ...
+2024-12-27 12:06:46.899	INFO	conf/conf.go:44	app config:{UserDefaultConf:0xc0002a3ef0 MySQLConf:0xc00007f260}
+2024-12-27 12:06:46.926	INFO	server/service.go:168	process:61235, trpc service:trpc.shortvideo.user.User launch success, tcp:0.0.0.0:20001, serving ...
+2024-12-27 12:09:50.758	INFO	conf/conf.go:44	app config:{UserDefaultConf:{Avator:http://shortvideo.com/default.jpg Sign:刚来，请多关照～ FansCount:0 FollowsCount:0} MySQLConf:{Address:localhost User:admin Pwd:123123 DBName:sv Port:3306 MaxOpenConns:1000 MaxIdleConns:50}}
+2024-12-27 12:09:50.782	INFO	server/service.go:168	process:62637, trpc service:trpc.shortvideo.user.User launch success, tcp:0.0.0.0:20001, serving ...
+2024-12-27 12:11:56.491	ERROR	auth/handler_impl.go:91	password[1234678] is invalid
+2024-12-27 12:12:10.631	ERROR	auth/handler_impl.go:64	FindUserByUsername failed, err:record not found

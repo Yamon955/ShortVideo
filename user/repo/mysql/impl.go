@@ -13,13 +13,14 @@ type dbClient struct {
 
 // FindUserByUsername 根据用户名查询用户
 func (d *dbClient) FindUserByUsername(ctx context.Context, username string) (*model.User, error) {
-	var user *model.User
+	// var user *model.User 未初始化，为 nil
+	user := new(model.User) // or user := &model.User{}
 	err := d.client.Where("username = ?", username).Take(user).Error
 	return user, err
 }
 
 // CreateUser 插入新用户
 func (d *dbClient) CreateUser(ctx context.Context, user *model.User) error {
-	err := d.client.Model(&model.User{}).Create(user).Error
+	err := d.client.Model(&model.User{}).Create(&user).Error
 	return err
 }
