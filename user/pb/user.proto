@@ -11,11 +11,7 @@ message UserInfo {
     int32 gender = 5;         // 性别 0-未知 1-男 2-女
     int32 fans_count = 6;     // 粉丝数
     int32 follows_count = 7;  // 关注数
-    int32 publish_count = 8;  // 发表作品数
-    int32 liked_count = 9;    // 点赞数
-    int32 collect_count = 10; // 收藏数
-    int64 register_time = 11; // 注册时间
-
+    int64 register_time = 8; // 注册时间
 }
 
 service User {
@@ -46,17 +42,11 @@ message LoginRsp {
 }
 
 enum PROFILE_TYPES {
-    all = 0;            // 拉取所有
+    all = 0;            // 所有
     username = 100;     // 用户名
     avator = 102;       // 头像
     sign = 103;         // 简介
     gender = 104;       // 性别
-    fansCount = 105;    // 粉丝数
-    followCount = 106;  // 关注数
-    publishCount = 107; // 发表作品数
-    likeCount = 108;    // 点赞数量
-    collectCount = 109; // 收藏数量
-    createTime = 110;   // 注册时间
 }
 
 message BatchGetProfileReq {

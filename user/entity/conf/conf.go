@@ -8,8 +8,8 @@ import (
 )
 
 type AppConfig struct {
-	*UserDefaultConfig `mapstructure:"user_default_conf"`
-	*MySQLConfig       `mapstructure:"mysql"`
+	UserDefaultConf UserDefaultConfig `mapstructure:"user_default_conf"`
+	MySQLConf       MySQLConfig       `mapstructure:"mysql"`
 }
 
 type UserDefaultConfig struct {
@@ -23,7 +23,7 @@ type MySQLConfig struct {
 	Address      string `mapstructure:"address"`
 	User         string `mapstructure:"user"`
 	Pwd          string `mapstructure:"pwd"`
-	DB           string `mapstructure:"db_name"`
+	DBName       string `mapstructure:"db_name"`
 	Port         string `mapstructure:"port"`
 	MaxOpenConns int    `mapstructure:"max_open_conns"`
 	MaxIdleConns int    `mapstructure:"max_idle_conns"`
@@ -41,6 +41,6 @@ func Init() error {
 		log.Errorf("read config failed, err:%v", err)
 		return errs.New(errcode.ErrUnmarshalConfig, "viper unmarshal config err")
 	}
-	log.Infof("app config:%v", AppConf)
+	log.Infof("app config:%+v", *AppConf)
 	return nil
 }
