@@ -4,7 +4,7 @@ package auth
 import (
 	"context"
 
-	"github.com/Yamon955/ShortVideo/user/pb"
+	"github.com/Yamon955/ShortVideo/protocol/user/pb"
 	"github.com/Yamon955/ShortVideo/user/repo/mysql"
 )
 

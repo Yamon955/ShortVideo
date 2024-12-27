@@ -7,7 +7,7 @@ import (
 	"github.com/Yamon955/ShortVideo/user/entity/conf"
 	"github.com/Yamon955/ShortVideo/user/entity/errcode"
 	"github.com/Yamon955/ShortVideo/user/entity/model"
-	"github.com/Yamon955/ShortVideo/user/pb"
+	"github.com/Yamon955/ShortVideo/protocol/user/pb"
 	"github.com/Yamon955/ShortVideo/user/repo/mysql"
 	"github.com/Yamon955/ShortVideo/user/utils"
 	"gorm.io/gorm"
