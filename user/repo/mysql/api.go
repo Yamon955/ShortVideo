@@ -11,6 +11,8 @@ import (
 type DBClient interface {
 	// FindUserByUsername 根据用户名查询用户
 	FindUserByUsername(ctx context.Context, username string) (*model.User, error)
+	// FindUserByUID 根据用户 ID 查询用户
+	FindUserByUID(_ context.Context, uid uint64) (*model.User, error)
 	// CreateUser 插入新用户
 	CreateUser(ctx context.Context, user *model.User) error
 }
