@@ -68,7 +68,7 @@ message BatchGetProfileReq {
 }
 message BatchGetProfileRsp {
     repeated UserInfo userInfos = 1;
-    repeated int64 failedUIDs = 2;
+    repeated uint64 failedUIDs = 2;
 }
 message SetProfileReq {
     uint64 uid = 1;
