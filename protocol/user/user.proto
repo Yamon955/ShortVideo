@@ -4,6 +4,13 @@ package trpc.shortvideo.user;
 option go_package = "github.com/Yamon955/ShortVideo/protocol/user/pb";
 
 message UserInfo {
+    MainPageInfo main_page_info = 1; // 个人主页信息 
+    int32 publish_list_count = 2;    // 作品列表总数
+    int32 liked_list_count = 3;      // 赞过列表总数
+    int32 collect_list_count = 4;    // 收藏列表总数
+}
+// 个人主页信息
+message MainPageInfo {
     uint64 ID = 1;            // uid
     string username = 2;      // 用户名
     string avator = 3;        // 头像
@@ -11,7 +18,7 @@ message UserInfo {
     int32 gender = 5;         // 性别 0-未知 1-男 2-女
     int32 fans_count = 6;     // 粉丝数
     int32 follows_count = 7;  // 关注数
-    int64 register_time = 8; // 注册时间
+    int64 register_time = 8;  // 注册时间
 }
 
 service User {
@@ -42,20 +49,26 @@ message LoginRsp {
 }
 
 enum PROFILE_TYPES {
-    all = 0;            // 所有
-    username = 100;     // 用户名
-    avator = 102;       // 头像
-    sign = 103;         // 简介
-    gender = 104;       // 性别
+    UNKNOW = 0;
+    MAIN_PAGE_INFO = 100;      // 个人主页信息 
+    PUBLISH_LIST_COUNT = 101;  // 作品列表总数
+    LIKED_LIST_COUNT = 102;    // 赞过列表总数
+    COLLECT_LIST_COUNT = 103;  // 收藏列表总数
+
+    USERNAME = 200;       // 用户名
+    AVATOR = 201;         // 头像
+    SIGN = 202;           // 简介
+    GENDER = 203;         // 性别
 }
 
 message BatchGetProfileReq {
-    repeated uint64 uid = 1;
+    repeated uint64 uids = 1;
     repeated PROFILE_TYPES profileTypes = 2;
     bool disableCache = 3;
 }
 message BatchGetProfileRsp {
     repeated UserInfo userInfos = 1;
+    repeated int64 failedUIDs = 2;
 }
 message SetProfileReq {
     uint64 uid = 1;
@@ -69,4 +82,5 @@ message SetProfileReq {
 }
 message SetProfileRsp {
     UserInfo userInfo = 1;
+    map<int32, string> failedTypes = 2;
 }

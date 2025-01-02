@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 
+	"github.com/Yamon955/ShortVideo/protocol/user/pb"
 	"github.com/Yamon955/ShortVideo/user/logic/auth"
 	"github.com/Yamon955/ShortVideo/user/logic/profile"
-	"github.com/Yamon955/ShortVideo/protocol/user/pb"
 	"trpc.group/trpc-go/trpc-go/errs"
 )
 
