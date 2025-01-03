@@ -26,10 +26,10 @@ func (s *userSvrImpl) Register(ctx context.Context, req *pb.RegisterReq) (*pb.Re
 	rsp := &pb.RegisterRsp{}
 	err := s.authHandler.HandleRegister(ctx, req)
 	if err != nil {
-		formatRegisterRsp(rsp, int64(errs.Code(err)), err.Error())
+		formatRsp(rsp, int64(errs.Code(err)), err.Error())
 		return rsp, err
 	}
-	formatRegisterRsp(rsp, 0, "注册成功，赶快去登录吧～")
+	formatRsp(rsp, 0, "注册成功，赶快去登录吧～")
 	return rsp, nil
 }
 
@@ -37,31 +37,41 @@ func (s *userSvrImpl) Register(ctx context.Context, req *pb.RegisterReq) (*pb.Re
 func (s *userSvrImpl) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginRsp, error) {
 	rsp := &pb.LoginRsp{}
 	if err := s.authHandler.HandleLogin(ctx, req, rsp); err != nil {
-		formatLoginRsp(rsp, int64(errs.Code(err)), err.Error())
+		formatRsp(rsp, int64(errs.Code(err)), err.Error())
 		return rsp, err
 	}
-	formatLoginRsp(rsp, 0, "登录成功")
+	formatRsp(rsp, 0, "登录成功")
 	return rsp, nil
 }
 
 // BatchGetProfile 用户资料获取，支持批量方式
 func (s *userSvrImpl) BatchGetProfile(ctx context.Context, req *pb.BatchGetProfileReq) (*pb.BatchGetProfileRsp, error) {
-
-	return nil, nil
+	rsp := &pb.BatchGetProfileRsp{}
+	if err := s.profileHandler.HandleBatchGetProfile(ctx, req, rsp); err != nil {
+		return rsp, err
+	}
+	return rsp, nil
 }
 
 // SetProfile 用户资料修改
 func (s *userSvrImpl) SetProfile(ctx context.Context, req *pb.SetProfileReq) (*pb.SetProfileRsp, error) {
-
-	return nil, nil
+	rsp := &pb.SetProfileRsp{}
+	if err := s.profileHandler.HandleSetProfile(ctx, req, rsp); err != nil {
+		return rsp, err
+	}
+	return rsp, nil
 }
 
-func formatRegisterRsp(rsp *pb.RegisterRsp, code int64, msg string) {
-	rsp.Code = code
-	rsp.Msg = msg
-}
-
-func formatLoginRsp(rsp *pb.LoginRsp, code int64, msg string) {
-	rsp.Code = code
-	rsp.Msg = msg
+// formatRsp 填充回包的 code、msg 字段
+func formatRsp(rsp interface{}, code int64, msg string) {
+	switch rsp.(type) {
+	case *pb.RegisterRsp:
+		tmp := rsp.(*pb.RegisterRsp)
+		tmp.Code = code
+		tmp.Msg = msg
+	case *pb.LoginRsp:
+		tmp := rsp.(*pb.LoginRsp)
+		tmp.Code = code
+		tmp.Msg = msg
+	}
 }

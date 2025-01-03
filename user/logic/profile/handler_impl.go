@@ -3,9 +3,9 @@ package profile
 import (
 	"context"
 
+	"github.com/Yamon955/ShortVideo/base"
 	"github.com/Yamon955/ShortVideo/protocol/user/pb"
 	"github.com/Yamon955/ShortVideo/user/entity/def"
-	"github.com/Yamon955/ShortVideo/user/entity/model"
 	"github.com/Yamon955/ShortVideo/user/repo/mysql"
 	"gorm.io/gorm"
 	"trpc.group/trpc-go/trpc-go"
@@ -22,15 +22,19 @@ func (h *handlerImpl) HandleBatchGetProfile(
 	ctx context.Context,
 	req *pb.BatchGetProfileReq,
 	rsp *pb.BatchGetProfileRsp) error {
+	// 默认拉取个人主页资料
+	if len(req.GetProfileTypes()) == 0 {
+		req.ProfileTypes = append(req.GetProfileTypes(), pb.PROFILE_TYPES_MAIN_PAGE_INFO)
+	}
 	for _, uid := range req.GetUids() {
-		if uid <= def.MIN_UID {
+		if uid < def.MIN_UID {
 			rsp.FailedUIDs = append(rsp.GetFailedUIDs(), uid)
 			log.ErrorContextf(ctx, "uid:%d is invalid", uid)
 			continue
 		}
 		var (
 			handlers         []func() error
-			user             = &model.User{}
+			user             = &base.User{}
 			publishListCount int64
 			likedListCount   int64
 			collectListCount int64
@@ -65,6 +69,7 @@ func (h *handlerImpl) HandleBatchGetProfile(
 			rsp.FailedUIDs = append(rsp.GetFailedUIDs(), uid)
 			continue
 		}
+		log.Infof("user:%v, publisListCount:%d, likedListCount:%d, collectListCount:%d", user, publishListCount, likedListCount, collectListCount)
 		userInfo := fillUserInfo(user, publishListCount, likedListCount, collectListCount)
 		rsp.UserInfos = append(rsp.UserInfos, userInfo)
 	}
@@ -107,7 +112,7 @@ func (h *handlerImpl) HandleSetProfile(
 	return nil
 }
 
-func fillUserInfo(user *model.User, publishListCount int64, likedListCount int64, collectListCount int64) *pb.UserInfo {
+func fillUserInfo(user *base.User, publishListCount int64, likedListCount int64, collectListCount int64) *pb.UserInfo {
 	userInfo := &pb.UserInfo{}
 	if user == nil {
 		return userInfo
