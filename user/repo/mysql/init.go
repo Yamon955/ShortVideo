@@ -44,5 +44,20 @@ func Init() (err error) {
 		log.Errorf("db.Migrate failed, err:%v", err)
 		return err
 	}
+	// AutoMigrate 根据 Video 结构体，自动创建表结构, 可以通过Set设置附加参数
+	if err := db.Set(`gorm:table_options`, "charset=utf8mb4").AutoMigrate(&base.Video{}); err != nil {
+		log.Errorf("db.Migrate failed, err:%v", err)
+		return err
+	}
+	// AutoMigrate 根据 User 结构体，自动创建表结构, 可以通过Set设置附加参数
+	if err := db.Set(`gorm:table_options`, "charset=utf8mb4").AutoMigrate(&base.Like{}); err != nil {
+		log.Errorf("db.Migrate failed, err:%v", err)
+		return err
+	}
+	// AutoMigrate 根据 User 结构体，自动创建表结构, 可以通过Set设置附加参数
+	if err := db.Set(`gorm:table_options`, "charset=utf8mb4").AutoMigrate(&base.Collect{}); err != nil {
+		log.Errorf("db.Migrate failed, err:%v", err)
+		return err
+	}
 	return nil
 }

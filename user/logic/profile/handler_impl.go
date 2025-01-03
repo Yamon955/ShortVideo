@@ -22,6 +22,10 @@ func (h *handlerImpl) HandleBatchGetProfile(
 	ctx context.Context,
 	req *pb.BatchGetProfileReq,
 	rsp *pb.BatchGetProfileRsp) error {
+	// 默认拉取个人主页资料
+	if len(req.GetProfileTypes()) == 0 {
+		req.ProfileTypes = append(req.GetProfileTypes(), pb.PROFILE_TYPES_MAIN_PAGE_INFO)
+	}
 	for _, uid := range req.GetUids() {
 		if uid < def.MIN_UID {
 			rsp.FailedUIDs = append(rsp.GetFailedUIDs(), uid)
@@ -65,6 +69,7 @@ func (h *handlerImpl) HandleBatchGetProfile(
 			rsp.FailedUIDs = append(rsp.GetFailedUIDs(), uid)
 			continue
 		}
+		log.Infof("user:%v, publisListCount:%d, likedListCount:%d, collectListCount:%d", user, publishListCount, likedListCount, collectListCount)
 		userInfo := fillUserInfo(user, publishListCount, likedListCount, collectListCount)
 		rsp.UserInfos = append(rsp.UserInfos, userInfo)
 	}

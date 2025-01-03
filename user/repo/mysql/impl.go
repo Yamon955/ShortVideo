@@ -61,7 +61,7 @@ func (d *dbClient) GetPublishListCount(ctx context.Context, uid uint64) (int64, 
 	var count int64
 	// videos 表建立了 uid 的索引，用于查找用户的作品列表
 	res := d.client.Model(&base.Video{}).Where("uid = ?", uid).Count(&count)
-	if err := res.Error; err != nil {
+	if err := res.Error; err != nil && err != gorm.ErrRecordNotFound {
 		log.ErrorContextf(ctx, "GetPublishListCount failed, uid:%d, err:%v", uid, err)
 	}
 	return count, nil
@@ -72,7 +72,7 @@ func (d *dbClient) GetLikedListCount(ctx context.Context, uid uint64) (int64, er
 	var count int64
 	// likes 表建立了 uid 的索引，用于查找用户的作品列表
 	res := d.client.Model(&base.Like{}).Where("uid = ?", uid).Count(&count)
-	if err := res.Error; err != nil {
+	if err := res.Error; err != nil && err != gorm.ErrRecordNotFound {
 		log.ErrorContextf(ctx, "GetPublishListCount failed, uid:%d, err:%v", uid, err)
 	}
 	return count, nil
@@ -83,7 +83,7 @@ func (d *dbClient) GetCollectListCount(ctx context.Context, uid uint64) (int64, 
 	var count int64
 	// collects 表建立了 uid 的索引，用于查找用户的作品列表
 	res := d.client.Model(&base.Collect{}).Where("uid = ?", uid).Count(&count)
-	if err := res.Error; err != nil {
+	if err := res.Error; err != nil && err != gorm.ErrRecordNotFound {
 		log.ErrorContextf(ctx, "GetPublishListCount failed, uid:%d, err:%v", uid, err)
 	}
 	return count, nil
