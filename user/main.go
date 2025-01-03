@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/Yamon955/ShortVideo/user/entity/conf"
 	"github.com/Yamon955/ShortVideo/protocol/user/pb"
+	"github.com/Yamon955/ShortVideo/user/entity/conf"
 	"github.com/Yamon955/ShortVideo/user/repo/mysql"
 	"trpc.group/trpc-go/trpc-go"
 )
