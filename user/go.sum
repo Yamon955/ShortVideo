@@ -1,5 +1,7 @@
 github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
+github.com/Yamon955/ShortVideo v0.0.0-20250103042040-3300eb9c4755 h1:WvlQprsejM01+3l9iL5r53PNDbqPQNGYnfttGsx9AxE=
+github.com/Yamon955/ShortVideo v0.0.0-20250103042040-3300eb9c4755/go.mod h1:eOqdS+OL7D87RAUGqhrRPsVUwklGy8nmiHa5DBm1Uc8=
 github.com/Yamon955/ShortVideo/protocol v0.0.0-20250102132706-286eeebbce8c h1:NMhC31DYFyh5vgtP6RAjQg/h0WO2kr9bNX8FR85h6dQ=
 github.com/Yamon955/ShortVideo/protocol v0.0.0-20250102132706-286eeebbce8c/go.mod h1:wS8fZYx1Xfm2r26UV1l+9pD32Va899bXQ/pyEZGDZRA=
 github.com/andybalholm/brotli v1.0.4 h1:V7DdXeJtZscaqfNuAdSRuRFzuiKlHSC/Zh3zl9qY3JY=

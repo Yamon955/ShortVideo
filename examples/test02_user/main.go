@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Yamon955/ShortVideo/user/pb"
+	"github.com/Yamon955/ShortVideo/protocol/user/pb"
 	"trpc.group/trpc-go/trpc-go/client"
 )
 
@@ -18,13 +18,15 @@ func main() {
 	test_login(proxy)
 	//test_register(proxy)
 	//test_login(proxy)
+	test_setProfile(proxy)
+	test_getProfile(proxy)
 
 }
 
 func test_login(proxy pb.UserClientProxy) {
 	req := &pb.LoginReq{
-		Username: "adin",
-		Password: "12346788",
+		Username: "admin",
+		Password: "12345678",
 	}
 	rsp, err := proxy.Login(context.Background(), req)
 	if err != nil {
@@ -45,4 +47,31 @@ func test_register(proxy pb.UserClientProxy) {
 		return
 	}
 	fmt.Printf("register suc, rsp:%v\n", rsp)
+}
+
+func test_getProfile(proxy pb.UserClientProxy) {
+	req := &pb.BatchGetProfileReq{
+		Uids:         []uint64{1, 2},
+		ProfileTypes: []pb.PROFILE_TYPES{pb.PROFILE_TYPES_MAIN_PAGE_INFO, pb.PROFILE_TYPES_PUBLISH_LIST_COUNT},
+	}
+	rsp, err := proxy.BatchGetProfile(context.Background(), req)
+	if err != nil {
+		fmt.Printf("get profile failed, err:%v\n", err)
+		return
+	}
+	fmt.Printf("get profile suc, rsp:%v\n", rsp)
+}
+
+func test_setProfile(proxy pb.UserClientProxy) {
+	req := &pb.SetProfileReq{
+		Uid:          1,
+		ProfileTypes: []pb.PROFILE_TYPES{pb.PROFILE_TYPES_USERNAME},
+		Username:     "admin",
+	}
+	rsp, err := proxy.SetProfile(context.Background(), req)
+	if err != nil {
+		fmt.Printf("set profile failed, err:%v\n", err)
+		return
+	}
+	fmt.Printf("set profile suc, rsp:%v\n", rsp)
 }

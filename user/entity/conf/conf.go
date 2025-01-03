@@ -13,10 +13,8 @@ type AppConfig struct {
 }
 
 type UserDefaultConfig struct {
-	Avator       string `mapstructure:"avator"`
-	Sign         string `mapstructure:"sign"`
-	FansCount    int    `mapstructure:"fans_count"`
-	FollowsCount int    `mapstructure:"follows_count"`
+	Avator string `mapstructure:"avator"`
+	Sign   string `mapstructure:"sign"`
 }
 
 type MySQLConfig struct {

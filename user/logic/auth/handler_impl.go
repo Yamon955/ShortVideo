@@ -4,11 +4,11 @@ import (
 	"context"
 	"time"
 
+	"github.com/Yamon955/ShortVideo/base"
 	"github.com/Yamon955/ShortVideo/protocol/user/pb"
 	"github.com/Yamon955/ShortVideo/user/entity/conf"
 	"github.com/Yamon955/ShortVideo/user/entity/def"
 	"github.com/Yamon955/ShortVideo/user/entity/errcode"
-	"github.com/Yamon955/ShortVideo/user/entity/model"
 	"github.com/Yamon955/ShortVideo/user/repo/mysql"
 	"github.com/Yamon955/ShortVideo/user/utils"
 	"gorm.io/gorm"
@@ -91,14 +91,12 @@ func checkUsernameAndPassword(username string, password string) error {
 }
 
 // createUser 新建一个用户，使用默认配置初始化
-func createUser(username string, pwd string) *model.User {
-	return &model.User{
+func createUser(username string, pwd string) *base.User {
+	return &base.User{
 		Username:     username,
 		Password:     utils.Md5(pwd),
 		Avatar:       conf.AppConf.UserDefaultConf.Avator,
 		Sign:         conf.AppConf.UserDefaultConf.Sign,
-		FansCount:    conf.AppConf.UserDefaultConf.FansCount,
-		FollowsCount: conf.AppConf.UserDefaultConf.FollowsCount,
 		RegisterTime: time.Now().Unix(),
 	}
 }
