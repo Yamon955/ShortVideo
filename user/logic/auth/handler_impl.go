@@ -4,20 +4,16 @@ import (
 	"context"
 	"time"
 
+	"github.com/Yamon955/ShortVideo/protocol/user/pb"
 	"github.com/Yamon955/ShortVideo/user/entity/conf"
+	"github.com/Yamon955/ShortVideo/user/entity/def"
 	"github.com/Yamon955/ShortVideo/user/entity/errcode"
 	"github.com/Yamon955/ShortVideo/user/entity/model"
-	"github.com/Yamon955/ShortVideo/protocol/user/pb"
 	"github.com/Yamon955/ShortVideo/user/repo/mysql"
 	"github.com/Yamon955/ShortVideo/user/utils"
 	"gorm.io/gorm"
 	"trpc.group/trpc-go/trpc-go/errs"
 	"trpc.group/trpc-go/trpc-go/log"
-)
-
-const (
-	maxLen = 24
-	minLen = 8
 )
 
 // handlerImpl 用户注册、登录处理器实现
@@ -83,11 +79,11 @@ func (h *handlerImpl) HandleLogin(ctx context.Context, req *pb.LoginReq, rsp *pb
 
 // checkUsernameAndPassword 检查用户名和密码长度是否合法
 func checkUsernameAndPassword(username string, password string) error {
-	if len(username) == 0 || len(username) > maxLen {
+	if len(username) == 0 || len(username) > def.MAX_LEN {
 		log.Errorf("username[%s] is invalid", password)
 		return errs.New(errcode.ErrUsername, "用户名不能为空或者超过24个字符(8个汉字)")
 	}
-	if len(password) < minLen || len(password) > maxLen {
+	if len(password) < def.PWD_MIN_LEN || len(password) > def.MAX_LEN {
 		log.Errorf("password[%s] is invalid", password)
 		return errs.New(errcode.ErrPassword, "请输入8-24位密码")
 	}

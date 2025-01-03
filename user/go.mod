@@ -3,6 +3,7 @@ module github.com/Yamon955/ShortVideo/user
 go 1.22.0
 
 require (
+	github.com/Yamon955/ShortVideo/protocol v0.0.0-20250102132706-286eeebbce8c
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/stretchr/testify v1.9.0
 	gorm.io/driver/mysql v1.5.7
@@ -34,7 +35,6 @@ require (
 
 require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
-	github.com/Yamon955/ShortVideo/protocol v0.0.0-20241227084333-f212cf3feb92
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/golang/snappy v0.0.3 // indirect

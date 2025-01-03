@@ -1,4 +1,5 @@
-package model
+// Package base 存放公共的基础信息
+package base
 
 // User 用户个人主页信息
 type User struct {
