@@ -52,7 +52,7 @@ func test_register(proxy pb.UserClientProxy) {
 func test_getProfile(proxy pb.UserClientProxy) {
 	req := &pb.BatchGetProfileReq{
 		Uids:         []uint64{1, 2},
-		ProfileTypes: []pb.PROFILE_TYPES{pb.PROFILE_TYPES_MAIN_PAGE_INFO, pb.PROFILE_TYPES_PUBLISH_LIST_COUNT},
+		ProfileTypes: []pb.PROFILE_TYPES{pb.PROFILE_TYPES_MAIN_PAGE_INFO, pb.PROFILE_TYPES_PUBLISH_LIST_COUNT, pb.PROFILE_TYPES_LIKED_LIST_COUNT},
 	}
 	rsp, err := proxy.BatchGetProfile(context.Background(), req)
 	if err != nil {
