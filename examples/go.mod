@@ -2,10 +2,9 @@ module github.com/Yamon955/ShortVideo/examples
 
 go 1.23.2
 
-require github.com/Yamon955/ShortVideo/user v0.0.0-20241226121058-7d50664cc993
-
 require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
+	github.com/Yamon955/ShortVideo/protocol v0.0.0-20250102132141-fb1a6bc47c7a // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-playground/form/v4 v4.2.0 // indirect
@@ -32,7 +31,7 @@ require (
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
-	google.golang.org/protobuf v1.33.0 // indirect
+	google.golang.org/protobuf v1.36.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	trpc.group/trpc-go/tnet v1.0.1 // indirect
 	trpc.group/trpc-go/trpc-go v1.0.3 // indirect

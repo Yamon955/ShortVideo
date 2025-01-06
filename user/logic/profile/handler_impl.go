@@ -101,10 +101,10 @@ func (h *handlerImpl) HandleSetProfile(
 	}
 	// 更新用户信息
 	if err := h.db.UpdateUserInfo(ctx, req.GetUid(), updateInfo); err != nil {
-		for k := range req.GetProfileTypes() {
-			_, exist := failedTypes[int32(k)]
+		for _, v := range req.GetProfileTypes() {
+			_, exist := failedTypes[int32(v)]
 			if !exist {
-				failedTypes[int32(k)] = err.Error()
+				failedTypes[int32(v)] = err.Error()
 			}
 		}
 	}
@@ -114,25 +114,24 @@ func (h *handlerImpl) HandleSetProfile(
 
 func fillUserInfo(user *base.User, publishListCount int64, likedListCount int64, collectListCount int64) *pb.UserInfo {
 	userInfo := &pb.UserInfo{}
-	if user == nil {
-		return userInfo
+	if user != nil {
+		userInfo = &pb.UserInfo{
+			MainPageInfo: &pb.MainPageInfo{
+				ID:       user.ID,
+				Username: user.Username,
+				Avator:   user.Avatar,
+				Sign:     user.Sign,
+				Gender:   user.Gender,
+			},
+		}
 	}
-	userInfo = &pb.UserInfo{
-		MainPageInfo: &pb.MainPageInfo{
-			ID:       user.ID,
-			Username: user.Username,
-			Avator:   user.Avatar,
-			Sign:     user.Sign,
-			Gender:   user.Gender,
-		},
-		PublishListCount: int32(publishListCount),
-		LikedListCount:   int32(likedListCount),
-		CollectListCount: int32(collectListCount),
-	}
+	userInfo.PublishListCount = int32(publishListCount)
+	userInfo.LikedListCount = int32(likedListCount)
+	userInfo.CollectListCount = int32(collectListCount)
 	return userInfo
 }
 
-// 检查用户名是否合法
+// checkUsername 检查用户名是否合法
 func checkUsername(ctx context.Context, username string, failedTypes map[int32]string, db mysql.DBClient) bool {
 	if len(username) > def.MAX_LEN {
 		failedTypes[int32(pb.PROFILE_TYPES_USERNAME)] = "username too long"
