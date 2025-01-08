@@ -11,4 +11,5 @@ const (
 	ErrPasswordNotMatch = 20008 // 用户名密码不匹配
 	ErrGenerateToekn    = 20009 // jwt 生成出错
 	ErrInvalidToken     = 20010 // token 有误
+	ErrUpdateUserInfo   = 20011 // 更新信息失败
 )

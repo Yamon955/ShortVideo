@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/Yamon955/ShortVideo/protocol/user/pb"
+	"github.com/Yamon955/ShortVideo/user/entity/def"
 	"github.com/Yamon955/ShortVideo/user/logic/auth"
 	"github.com/Yamon955/ShortVideo/user/logic/profile"
 )
@@ -27,7 +28,7 @@ func (s *userSvrImpl) Register(ctx context.Context, req *pb.RegisterReq) (*pb.Re
 	if err != nil {
 		return nil, err
 	}
-	formatRsp(rsp, 0, "注册成功，赶快去登录吧～")
+	formatRsp(rsp, def.SUCCESS, "注册成功，赶快去登录吧～")
 	return rsp, nil
 }
 
@@ -37,7 +38,7 @@ func (s *userSvrImpl) Login(ctx context.Context, req *pb.LoginReq) (*pb.LoginRsp
 	if err := s.authHandler.HandleLogin(ctx, req, rsp); err != nil {
 		return nil, err
 	}
-	formatRsp(rsp, 0, "登录成功")
+	formatRsp(rsp, def.SUCCESS, "登录成功")
 	return rsp, nil
 }
 
@@ -54,8 +55,9 @@ func (s *userSvrImpl) BatchGetProfile(ctx context.Context, req *pb.BatchGetProfi
 func (s *userSvrImpl) SetProfile(ctx context.Context, req *pb.SetProfileReq) (*pb.SetProfileRsp, error) {
 	rsp := &pb.SetProfileRsp{}
 	if err := s.profileHandler.HandleSetProfile(ctx, req, rsp); err != nil {
-		return rsp, nil
+		return nil, err
 	}
+	formatRsp(rsp, def.SUCCESS, "更新成功")
 	return rsp, nil
 }
 
@@ -64,11 +66,15 @@ func formatRsp(rsp interface{}, code int64, msg string) {
 	switch rsp.(type) {
 	case *pb.RegisterRsp:
 		tmp := rsp.(*pb.RegisterRsp)
-		tmp.Code = code
-		tmp.Msg = msg
+		tmp.StatusCode = code
+		tmp.StatusMsg = msg
 	case *pb.LoginRsp:
 		tmp := rsp.(*pb.LoginRsp)
-		tmp.Code = code
-		tmp.Msg = msg
+		tmp.StatusCode = code
+		tmp.StatusMsg = msg
+	case *pb.SetProfileRsp:
+		tmp := rsp.(*pb.SetProfileRsp)
+		tmp.StatusCode = code
+		tmp.StatusMsg = msg
 	}
 }
