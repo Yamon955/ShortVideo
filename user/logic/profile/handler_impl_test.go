@@ -3,14 +3,15 @@ package profile
 import (
 	"context"
 	"errors"
-	"fmt"
 	"testing"
 
 	"github.com/Yamon955/ShortVideo/base"
 	"github.com/Yamon955/ShortVideo/protocol/user/pb"
+	"github.com/Yamon955/ShortVideo/user/entity/errcode"
+	MySQL "github.com/go-sql-driver/mysql"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"gorm.io/gorm"
+	"trpc.group/trpc-go/trpc-go/errs"
 )
 
 // MockDBClient 是一个模拟的数据库客户端
@@ -84,12 +85,10 @@ func TestHandleBatchGetProfile(t *testing.T) {
 	mockDB.On("FindUserByUID", ctx, uint64(2)).Return(nil, errors.New("user not found"))
 
 	err := handler.HandleBatchGetProfile(ctx, req, rsp)
-	fmt.Printf("rsp%v", rsp)
 	assert.NoError(t, err)
 	assert.Len(t, rsp.UserInfos, 1)
 	assert.Equal(t, uint64(1), rsp.UserInfos[0].MainPageInfo.ID)
-	assert.Len(t, rsp.FailedUIDs, 1)
-	assert.Equal(t, uint64(2), rsp.FailedUIDs[0])
+	assert.Len(t, rsp.FailedUids, 1)
 }
 
 func TestHandleSetProfile(t *testing.T) {
@@ -105,21 +104,25 @@ func TestHandleSetProfile(t *testing.T) {
 	}
 	rsp := &pb.SetProfileRsp{}
 
-	mockDB.On("FindUserByUsername", ctx, "newuser").Return(nil, gorm.ErrRecordNotFound)
+	user := &base.User{
+		ID:       1,
+		Username: "testuser",
+		Avatar:   "http://example.com/avatar.jpg",
+		Sign:     "Hello",
+		Gender:   1,
+	}
+	mockDB.On("FindUserByUID", ctx, req.GetUid()).Return(user, nil)
 	mockDB.On("UpdateUserInfo", ctx, uint64(1), mock.Anything).Return(nil)
 
 	err := handler.HandleSetProfile(ctx, req, rsp)
 	assert.NoError(t, err)
-	assert.Empty(t, rsp.FailedTypes)
+	assert.Equal(t, 0, int(errs.Code(err)))
 }
 
 func TestHandleSetProfile_UsernameTooLong(t *testing.T) {
 	ctx := context.Background()
 	mockDB := new(MockDBClient)
 	handler := &handlerImpl{db: mockDB}
-
-	// 设置预期的 UpdateUserInfo 方法调用和返回值
-	mockDB.On("UpdateUserInfo", mock.Anything, uint64(1), mock.Anything).Return(nil)
 
 	req := &pb.SetProfileReq{
 		Uid:          1,
@@ -128,10 +131,20 @@ func TestHandleSetProfile_UsernameTooLong(t *testing.T) {
 	}
 	rsp := &pb.SetProfileRsp{}
 
+	user := &base.User{
+		ID:       1,
+		Username: "testuser",
+		Avatar:   "http://example.com/avatar.jpg",
+		Sign:     "Hello",
+		Gender:   1,
+	}
+	mockDB.On("FindUserByUID", ctx, req.GetUid()).Return(user, nil)
+	// 设置预期的 UpdateUserInfo 方法调用和返回值
+	mockDB.On("UpdateUserInfo", mock.Anything, uint64(1), mock.Anything).Return(nil)
+
 	err := handler.HandleSetProfile(ctx, req, rsp)
-	assert.NoError(t, err)
-	assert.NotEmpty(t, rsp.FailedTypes)
-	assert.Equal(t, "username too long", rsp.FailedTypes[int32(pb.PROFILE_TYPES_USERNAME)])
+	assert.Error(t, err)
+	assert.Equal(t, errcode.ErrUsername, int(errs.Code(err)))
 }
 
 func TestHandleSetProfile_UsernameAlreadyUsed(t *testing.T) {
@@ -146,19 +159,24 @@ func TestHandleSetProfile_UsernameAlreadyUsed(t *testing.T) {
 	}
 	rsp := &pb.SetProfileRsp{}
 
-	existingUser := &base.User{
-		ID:       2,
-		Username: "existinguser",
+	user := &base.User{
+		ID:       1,
+		Username: "testuser",
+		Avatar:   "http://example.com/avatar.jpg",
+		Sign:     "Hello",
+		Gender:   1,
 	}
-
-	mockDB.On("FindUserByUsername", ctx, "existinguser").Return(existingUser, nil)
+	mockDB.On("FindUserByUID", ctx, req.GetUid()).Return(user, nil)
 	// 设置预期的 UpdateUserInfo 方法调用和返回值
-	mockDB.On("UpdateUserInfo", mock.Anything, uint64(1), mock.Anything).Return(nil)
+	mockDB.On("UpdateUserInfo", mock.Anything, uint64(1), mock.Anything).Return(
+		&MySQL.MySQLError{
+			Number:  1062,
+			Message: "Duplicate entry 'duplicate' for key 'users.uni_users_username'"},
+	)
 
 	err := handler.HandleSetProfile(ctx, req, rsp)
-	assert.NoError(t, err)
-	assert.NotEmpty(t, rsp.FailedTypes)
-	assert.Equal(t, "username is used", rsp.FailedTypes[int32(pb.PROFILE_TYPES_USERNAME)])
+	assert.Error(t, err)
+	assert.Equal(t, errcode.ErrUsernameIsUsed, int(errs.Code(err)))
 }
 
 func TestHandleSetProfile_UpdateUserInfoError(t *testing.T) {
@@ -174,40 +192,17 @@ func TestHandleSetProfile_UpdateUserInfoError(t *testing.T) {
 	}
 	rsp := &pb.SetProfileRsp{}
 
-	mockDB.On("FindUserByUsername", ctx, "newuser").Return(nil, gorm.ErrRecordNotFound)
+	user := &base.User{
+		ID:       1,
+		Username: "testuser",
+		Avatar:   "http://example.com/avatar.jpg",
+		Sign:     "Hello",
+		Gender:   1,
+	}
+	mockDB.On("FindUserByUID", ctx, req.GetUid()).Return(user, nil)
 	mockDB.On("UpdateUserInfo", ctx, uint64(1), mock.Anything).Return(errors.New("update failed"))
 
 	err := handler.HandleSetProfile(ctx, req, rsp)
-	assert.NoError(t, err)
-	assert.NotEmpty(t, rsp.FailedTypes)
-	assert.Equal(t, "update failed", rsp.FailedTypes[int32(pb.PROFILE_TYPES_AVATOR)])
-}
-
-func TestCheckUsername(t *testing.T) {
-	ctx := context.Background()
-	mockDB := new(MockDBClient)
-
-	// Test case: Username too long
-	failedTypes := make(map[int32]string)
-	result := checkUsername(ctx, "thisusernameiswaytoolongandshouldfailvalidation", failedTypes, mockDB)
-	assert.False(t, result)
-	assert.Equal(t, "username too long", failedTypes[int32(pb.PROFILE_TYPES_USERNAME)])
-
-	// Test case: Username already used
-	failedTypes = make(map[int32]string)
-	existingUser := &base.User{
-		ID:       2,
-		Username: "existinguser",
-	}
-	mockDB.On("FindUserByUsername", ctx, "existinguser").Return(existingUser, nil)
-	result = checkUsername(ctx, "existinguser", failedTypes, mockDB)
-	assert.False(t, result)
-	assert.Equal(t, "username is used", failedTypes[int32(pb.PROFILE_TYPES_USERNAME)])
-
-	// Test case: Username available
-	failedTypes = make(map[int32]string)
-	mockDB.On("FindUserByUsername", ctx, "newuser").Return(nil, gorm.ErrRecordNotFound)
-	result = checkUsername(ctx, "newuser", failedTypes, mockDB)
-	assert.True(t, result)
-	assert.Empty(t, failedTypes)
+	assert.Error(t, err)
+	assert.Equal(t, errcode.ErrUpdateUserInfo, int(errs.Code(err)))
 }
