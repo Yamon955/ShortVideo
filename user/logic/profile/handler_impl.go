@@ -133,6 +133,10 @@ func fillUserInfo(user *base.User, publishListCount int64, likedListCount int64,
 
 // checkUsername 检查用户名是否合法
 func checkUsername(ctx context.Context, username string, failedTypes map[int32]string, db mysql.DBClient) bool {
+	if len(username) == 0 {
+		failedTypes[int32(pb.PROFILE_TYPES_USERNAME)] = "username isn't null"
+		return false
+	}
 	if len(username) > def.MAX_LEN {
 		failedTypes[int32(pb.PROFILE_TYPES_USERNAME)] = "username too long"
 		return false
