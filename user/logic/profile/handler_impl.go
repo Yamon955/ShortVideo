@@ -8,6 +8,7 @@ import (
 	"github.com/Yamon955/ShortVideo/user/entity/def"
 	"github.com/Yamon955/ShortVideo/user/entity/errcode"
 	"github.com/Yamon955/ShortVideo/user/repo/mysql"
+	"github.com/Yamon955/ShortVideo/user/utils"
 	MySQL "github.com/go-sql-driver/mysql"
 	"trpc.group/trpc-go/trpc-go"
 	"trpc.group/trpc-go/trpc-go/errs"
@@ -25,6 +26,8 @@ func (h *handlerImpl) HandleBatchGetProfile(
 	req *pb.BatchGetProfileReq,
 	rsp *pb.BatchGetProfileRsp) error {
 	rsp.FailedUids = make(map[uint64]string)
+	// 去重
+	req.Uids = utils.Duplicate(req.Uids)
 	// 默认拉取个人主页资料
 	if len(req.GetProfileTypes()) == 0 {
 		req.ProfileTypes = append(req.GetProfileTypes(), pb.PROFILE_TYPES_MAIN_PAGE_INFO)

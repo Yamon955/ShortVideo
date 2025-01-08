@@ -4,7 +4,7 @@ go 1.22.0
 
 require (
 	github.com/Yamon955/ShortVideo v0.0.0-20250103042040-3300eb9c4755
-	github.com/Yamon955/ShortVideo/protocol v0.0.0-20250102132706-286eeebbce8c
+	github.com/Yamon955/ShortVideo/protocol v0.0.0-20250108090952-e3b501a7db19
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/stretchr/testify v1.9.0
 	gorm.io/driver/mysql v1.5.7

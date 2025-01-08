@@ -4,6 +4,8 @@ github.com/Yamon955/ShortVideo v0.0.0-20250103042040-3300eb9c4755 h1:WvlQprsejM0
 github.com/Yamon955/ShortVideo v0.0.0-20250103042040-3300eb9c4755/go.mod h1:eOqdS+OL7D87RAUGqhrRPsVUwklGy8nmiHa5DBm1Uc8=
 github.com/Yamon955/ShortVideo/protocol v0.0.0-20250102132706-286eeebbce8c h1:NMhC31DYFyh5vgtP6RAjQg/h0WO2kr9bNX8FR85h6dQ=
 github.com/Yamon955/ShortVideo/protocol v0.0.0-20250102132706-286eeebbce8c/go.mod h1:wS8fZYx1Xfm2r26UV1l+9pD32Va899bXQ/pyEZGDZRA=
+github.com/Yamon955/ShortVideo/protocol v0.0.0-20250108090952-e3b501a7db19 h1:LXCFLQTTgbcCwVnbofqhALZ72w9B7r8UIH7jEDufjhY=
+github.com/Yamon955/ShortVideo/protocol v0.0.0-20250108090952-e3b501a7db19/go.mod h1:wS8fZYx1Xfm2r26UV1l+9pD32Va899bXQ/pyEZGDZRA=
 github.com/andybalholm/brotli v1.0.4 h1:V7DdXeJtZscaqfNuAdSRuRFzuiKlHSC/Zh3zl9qY3JY=
 github.com/andybalholm/brotli v1.0.4/go.mod h1:fO7iG3H7G2nSZ7m0zPUDn85XEX2GTukHGRSepvi9Eig=
 github.com/benbjohnson/clock v1.1.0 h1:Q92kusRqC1XV2MjkWETPvjJVqKetz1OzxZB7mHJLju8=

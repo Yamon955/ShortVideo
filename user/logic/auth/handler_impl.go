@@ -11,6 +11,7 @@ import (
 	"github.com/Yamon955/ShortVideo/user/entity/errcode"
 	"github.com/Yamon955/ShortVideo/user/repo/mysql"
 	"github.com/Yamon955/ShortVideo/user/utils"
+	MySQL "github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
 	"trpc.group/trpc-go/trpc-go/errs"
 	"trpc.group/trpc-go/trpc-go/log"
@@ -30,19 +31,11 @@ func (h *handlerImpl) HandleRegister(ctx context.Context, req *pb.RegisterReq) e
 	if err != nil {
 		return err
 	}
-	var user *base.User
-	// 检查用户名是否被占用
-	user, err = h.db.FindUserByUsername(ctx, username)
-	if err != nil && err != gorm.ErrRecordNotFound {
-		log.ErrorContextf(ctx, "FindUserByUsername failed, err:%v", err)
-		return errs.New(errcode.ErrDBOperation, "注册失败，请稍后重试！")
-	}
-	if user != nil && user.ID != 0 {
-		return errs.New(errcode.ErrUsernameIsUsed, "用户名被占用")
-	}
 	// 新建新用户插入数据库
 	if err := h.db.CreateUser(ctx, createUser(username, password)); err != nil {
-		log.ErrorContextf(ctx, "CreateUser failed, err:%v", err)
+		if mysqlErr, ok := err.(*MySQL.MySQLError); ok && mysqlErr.Number == def.MySQLErrCode_UsernameIsDuplicate {
+			return errs.New(errcode.ErrUsernameIsUsed, "用户名已存在")
+		}
 		return errs.New(errcode.ErrDBOperation, "注册失败，请稍后重试！")
 	}
 	return nil
@@ -71,7 +64,7 @@ func (h *handlerImpl) HandleLogin(ctx context.Context, req *pb.LoginReq, rsp *pb
 	token, err = utils.GenerateTokn(user.ID, username)
 	if err != nil {
 		log.ErrorContextf(ctx, "GenerateTokn failed, err:%v", err)
-		return errs.New(errcode.ErrGenerateToekn, "登录失败，请重新登录")
+		return errs.New(errcode.ErrGenerateToekn, "登录失败，请稍后重试！")
 	}
 	rsp.Uid = user.ID
 	rsp.Token = token
