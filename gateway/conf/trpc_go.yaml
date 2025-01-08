@@ -5,10 +5,11 @@ server:
     - routerFilter
   service:
     - name: trpc.shortvideo.gateway.Gateway
+      ip: 127.0.0.1
+      port: 10001
       network: tcp
       protocol: http_no_protocol # 泛 HTTP 标准服务
       timeout: 20000
-      port: 10001
 
 client:
   service:

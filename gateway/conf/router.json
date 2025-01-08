@@ -16,5 +16,50 @@
         "target": "ip://127.0.0.1:9000",
         "timeout": "2s",
         "protocol": "trpc"
+    },
+    {
+        "path": "/shortvideo/user/register",
+        "is_regex": "0",
+        "service": "trpc.shortvideo.user.User",
+        "method": "/trpc.shortvideo.user.User/Register",
+        "target": "ip://127.0.0.1:20001",
+        "timeout": "2s",
+        "protocol": "trpc"
+    },
+    {
+        "path": "/shortvideo/user/login",
+        "is_regex": "0",
+        "service": "trpc.shortvideo.user.User",
+        "method": "/trpc.shortvideo.user.User/Login",
+        "target": "ip://127.0.0.1:20001",
+        "timeout": "2s",
+        "protocol": "trpc"
+    },
+    {
+        "path": "/shortvideo/user/login",
+        "is_regex": "0",
+        "service": "trpc.shortvideo.user.User",
+        "method": "/trpc.shortvideo.user.User/Login",
+        "target": "ip://127.0.0.1:20001",
+        "timeout": "2s",
+        "protocol": "trpc"
+    },
+    {
+        "path": "/shortvideo/user",
+        "is_regex": "0",
+        "service": "trpc.shortvideo.user.User",
+        "method": "/trpc.shortvideo.user.User/BatchGetProfile",
+        "target": "ip://127.0.0.1:20001",
+        "timeout": "2s",
+        "protocol": "trpc"
+    },
+    {
+        "path": "/shortvideo/user/setprofile",
+        "is_regex": "0",
+        "service": "trpc.shortvideo.user.User",
+        "method": "/trpc.shortvideo.user.User/SetProfile",
+        "target": "ip://127.0.0.1:20001",
+        "timeout": "2s",
+        "protocol": "trpc"
     }
 ]

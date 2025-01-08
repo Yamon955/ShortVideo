@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -21,6 +22,12 @@ var (
 	canonicalContentType   = textproto.CanonicalMIMEHeaderKey("Content-Type")
 	canonicalContentLength = textproto.CanonicalMIMEHeaderKey("Content-Length")
 )
+
+// 当调用的服务返回 err != nil 时，rsp.Body 会被清空，因此，需要将 err 信息转成 json 形式放到 http.rsp 中
+type errRsp struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+}
 
 func forwardTRPC(w http.ResponseWriter, r *http.Request, routeConf *entity.RouteConf) error {
 	timeout, err := time.ParseDuration(routeConf.Timeout)
@@ -46,8 +53,13 @@ func forwardTRPC(w http.ResponseWriter, r *http.Request, routeConf *entity.Route
 		client.WithCurrentCompressType(codec.CompressTypeNoop),           // 不要自动解压缩
 	}
 	rspBody := &codec.Body{}
-	if err := client.DefaultClient.Invoke(ctx, reqBody, rspBody, opts...); err != nil{
-		return err
+	if err := client.DefaultClient.Invoke(ctx, reqBody, rspBody, opts...); err != nil {
+		// err != nil 时，rsp.Body 会被清空
+		rsp := &errRsp{
+			Code: int(errs.Code(err)),
+			Msg:  errs.Msg(err),
+		}
+		rspBody.Data, _ = json.Marshal(rsp)
 	}
 	if err := transHTTPRsp(w, r, rspBody); err != nil {
 		return errs.New(entity.ErrTransHTTPRsp, "trpc.rsp trans to http.rsp err")
