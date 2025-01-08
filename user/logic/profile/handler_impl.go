@@ -6,9 +6,11 @@ import (
 	"github.com/Yamon955/ShortVideo/base"
 	"github.com/Yamon955/ShortVideo/protocol/user/pb"
 	"github.com/Yamon955/ShortVideo/user/entity/def"
+	"github.com/Yamon955/ShortVideo/user/entity/errcode"
 	"github.com/Yamon955/ShortVideo/user/repo/mysql"
-	"gorm.io/gorm"
+	MySQL "github.com/go-sql-driver/mysql"
 	"trpc.group/trpc-go/trpc-go"
+	"trpc.group/trpc-go/trpc-go/errs"
 	"trpc.group/trpc-go/trpc-go/log"
 )
 
@@ -22,13 +24,14 @@ func (h *handlerImpl) HandleBatchGetProfile(
 	ctx context.Context,
 	req *pb.BatchGetProfileReq,
 	rsp *pb.BatchGetProfileRsp) error {
+	rsp.FailedUids = make(map[uint64]string)
 	// 默认拉取个人主页资料
 	if len(req.GetProfileTypes()) == 0 {
 		req.ProfileTypes = append(req.GetProfileTypes(), pb.PROFILE_TYPES_MAIN_PAGE_INFO)
 	}
 	for _, uid := range req.GetUids() {
 		if uid < def.MIN_UID {
-			rsp.FailedUIDs = append(rsp.GetFailedUIDs(), uid)
+			rsp.FailedUids[uid] = "uid is invalid"
 			log.ErrorContextf(ctx, "uid:%d is invalid", uid)
 			continue
 		}
@@ -49,27 +52,26 @@ func (h *handlerImpl) HandleBatchGetProfile(
 			case pb.PROFILE_TYPES_PUBLISH_LIST_COUNT:
 				handlers = append(handlers, func() (err error) {
 					publishListCount, err = h.db.GetPublishListCount(ctx, uid)
-					return err
+					return
 				})
 			case pb.PROFILE_TYPES_LIKED_LIST_COUNT:
 				handlers = append(handlers, func() (err error) {
 					likedListCount, err = h.db.GetLikedListCount(ctx, uid)
-					return err
+					return
 				})
 			case pb.PROFILE_TYPES_COLLECT_LIST_COUNT:
 				handlers = append(handlers, func() (err error) {
 					collectListCount, err = h.db.GetCollectListCount(ctx, uid)
-					return err
+					return
 				})
 			}
 		}
 		// 并行拉取
 		if err := trpc.GoAndWait(handlers...); err != nil {
 			log.ErrorContextf(ctx, "GoAndWait failed, uid:%d, err:%v", uid, err)
-			rsp.FailedUIDs = append(rsp.GetFailedUIDs(), uid)
+			rsp.FailedUids[uid] = err.Error()
 			continue
 		}
-		log.Infof("user:%v, publisListCount:%d, likedListCount:%d, collectListCount:%d", user, publishListCount, likedListCount, collectListCount)
 		userInfo := fillUserInfo(user, publishListCount, likedListCount, collectListCount)
 		rsp.UserInfos = append(rsp.UserInfos, userInfo)
 	}
@@ -83,32 +85,40 @@ func (h *handlerImpl) HandleSetProfile(
 	rsp *pb.SetProfileRsp) error {
 	// 要更新的信息
 	updateInfo := make(map[string]interface{})
-	// 更新失败的字段
-	failedTypes := make(map[int32]string)
+	user, _ := h.db.FindUserByUID(ctx, req.GetUid())
 	for _, infoType := range req.GetProfileTypes() {
 		switch infoType {
 		case pb.PROFILE_TYPES_USERNAME:
-			if checkUsername(ctx, req.GetUsername(), failedTypes, h.db) {
+			if err := checkUsername(req.GetUsername()); err != nil {
+				return err
+			}
+			if user.Username != req.GetUsername() {
 				updateInfo["username"] = req.GetUsername()
 			}
 		case pb.PROFILE_TYPES_AVATOR:
-			updateInfo["avator"] = req.GetAvator()
+			if user.Avatar != req.GetAvator() {
+				updateInfo["avatar"] = req.GetAvator()
+			}
 		case pb.PROFILE_TYPES_SIGN:
-			updateInfo["sign"] = req.GetSign()
+			if user.Sign != req.GetSign() {
+				updateInfo["sign"] = req.GetSign()
+			}
 		case pb.PROFILE_TYPES_GENDER:
-			updateInfo["gender"] = req.GetGender()
-		}
-	}
-	// 更新用户信息
-	if err := h.db.UpdateUserInfo(ctx, req.GetUid(), updateInfo); err != nil {
-		for _, v := range req.GetProfileTypes() {
-			_, exist := failedTypes[int32(v)]
-			if !exist {
-				failedTypes[int32(v)] = err.Error()
+			if user.Gender != req.GetGender() {
+				updateInfo["gender"] = req.GetGender()
 			}
 		}
 	}
-	rsp.FailedTypes = failedTypes
+	if len(updateInfo) == 0 {
+		return nil
+	}
+	// 更新用户信息
+	if err := h.db.UpdateUserInfo(ctx, req.GetUid(), updateInfo); err != nil {
+		if mysqlErr, ok := err.(*MySQL.MySQLError); ok && mysqlErr.Number == def.MySQLErrCode_UsernameIsDuplicate {
+			return errs.New(errcode.ErrUsernameIsUsed, "用户名被占用")
+		}
+		return errs.New(errcode.ErrUpdateUserInfo, "更新失败，请稍后重试！")
+	}
 	return nil
 }
 
@@ -132,22 +142,9 @@ func fillUserInfo(user *base.User, publishListCount int64, likedListCount int64,
 }
 
 // checkUsername 检查用户名是否合法
-func checkUsername(ctx context.Context, username string, failedTypes map[int32]string, db mysql.DBClient) bool {
-	if len(username) == 0 {
-		failedTypes[int32(pb.PROFILE_TYPES_USERNAME)] = "username isn't null"
-		return false
+func checkUsername(username string) error {
+	if len(username) == 0 || len(username) > def.MAX_LEN {
+		return errs.New(errcode.ErrUsername, "用户名不能为空或者超过24个字符(8个汉字)")
 	}
-	if len(username) > def.MAX_LEN {
-		failedTypes[int32(pb.PROFILE_TYPES_USERNAME)] = "username too long"
-		return false
-	}
-	_, err := db.FindUserByUsername(ctx, username)
-	if err == nil {
-		failedTypes[int32(pb.PROFILE_TYPES_USERNAME)] = "username is used"
-		return false
-	} else if err != gorm.ErrRecordNotFound {
-		failedTypes[int32(pb.PROFILE_TYPES_USERNAME)] = err.Error()
-		return false
-	}
-	return true
+	return nil
 }
