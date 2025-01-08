@@ -6,7 +6,7 @@ type User struct {
 	ID           uint64 `gorm:"column:id;primaryKey;autoIncrement;index" json:"id"` // 自增主键，用户ID
 	Username     string `gorm:"column:username;unique;index"  json:"username"`      // 用户名（唯一）
 	Password     string `gorm:"column:password"  json:"password"`                   // 加密后的密码
-	Avatar       string `gorm:"column:avatar" json:"avatar"`                        // 简介
+	Avator       string `gorm:"column:avator" json:"avator"`                        // 简介
 	Sign         string `gorm:"column:sign"  json:"sign"`                           // 头像
 	Gender       int32  `gorm:"column:gender" json:"gender"`                        // 性别 0-未知 1-男 2-女
 	FansCount    int32  `gorm:"column:fans_count" json:"fans_count"`                // 粉丝数
