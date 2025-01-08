@@ -33,8 +33,8 @@ message RegisterReq {
     string password = 2;
 }
 message RegisterRsp {
-    int64 code = 1;
-    string msg = 2;
+    int64 status_code = 1;
+    string status_msg = 2;
 }
 
 message LoginReq {
@@ -42,8 +42,8 @@ message LoginReq {
     string password = 2;
 }
 message LoginRsp {
-    int64 code = 1;
-    string msg = 2; 
+    int64 status_code = 1;
+    string status_msg = 2; 
     uint64 uid = 3;
     string token = 4;
 }
@@ -63,17 +63,17 @@ enum PROFILE_TYPES {
 
 message BatchGetProfileReq {
     repeated uint64 uids = 1;
-    repeated PROFILE_TYPES profileTypes = 2;
-    bool disableCache = 3;
+    repeated PROFILE_TYPES profile_types = 2;
+    bool disable_cache = 3;
 }
 message BatchGetProfileRsp {
-    repeated UserInfo userInfos = 1;
-    repeated uint64 failedUIDs = 2;
+    repeated UserInfo user_infos = 1; 
+    map<uint64, string> failed_uids = 2; // 拉取资料失败的uid及失败原因
 }
 message SetProfileReq {
     uint64 uid = 1;
-    repeated PROFILE_TYPES profileTypes = 2;
-    bool disableCache = 3;
+    repeated PROFILE_TYPES profile_types = 2;
+    bool disable_cache = 3;
     string username = 4;      // 用户名
     string avator = 5;        // 头像
     string sign = 6;          // 简介
@@ -81,6 +81,6 @@ message SetProfileReq {
 
 }
 message SetProfileRsp {
-    UserInfo userInfo = 1;
-    map<int32, string> failedTypes = 2;
+    int64 status_code = 1;
+    string status_msg = 2;
 }
