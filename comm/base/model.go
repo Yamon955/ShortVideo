@@ -1,4 +1,4 @@
-// Package base 存放公共的基础信息
+// Package base 存放公共的基础功能包
 package base
 
 // User 用户个人主页信息
