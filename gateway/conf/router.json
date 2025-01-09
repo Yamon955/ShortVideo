@@ -24,7 +24,8 @@
         "method": "/trpc.shortvideo.user.User/Register",
         "target": "ip://127.0.0.1:20001",
         "timeout": "2s",
-        "protocol": "trpc"
+        "protocol": "trpc",
+        "is_allow_no_auth": true
     },
     {
         "path": "/shortvideo/user/login",
@@ -33,16 +34,8 @@
         "method": "/trpc.shortvideo.user.User/Login",
         "target": "ip://127.0.0.1:20001",
         "timeout": "2s",
-        "protocol": "trpc"
-    },
-    {
-        "path": "/shortvideo/user/login",
-        "is_regex": "0",
-        "service": "trpc.shortvideo.user.User",
-        "method": "/trpc.shortvideo.user.User/Login",
-        "target": "ip://127.0.0.1:20001",
-        "timeout": "2s",
-        "protocol": "trpc"
+        "protocol": "trpc",
+        "is_allow_no_auth": true
     },
     {
         "path": "/shortvideo/user",

@@ -14,7 +14,9 @@ import (
 
 func init() {
 	// 服务端路由拦截器
-	filter.Register("routerFilter", routerFilter(), nil)
+	filter.Register("router_filter", routerFilter(), nil)
+	// 服务端鉴权拦截器
+	filter.Register("auth_filter", authFilter(), nil)
 }
 
 func main() {
