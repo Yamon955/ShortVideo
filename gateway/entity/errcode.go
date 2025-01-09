@@ -9,4 +9,5 @@ const (
 	ErrContentType            = 10006 // 非法的 content type
 	ErrReadHTTPReqBody        = 10007 // 读取 http.req.Body 出错
 	ErrTransHTTPRsp           = 10008 // trpc.rsp 转成 http.rsp 出错
+	ErrVerifAuthFail          = 10009 // 服务端鉴权失败
 )

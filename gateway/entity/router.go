@@ -11,7 +11,7 @@ type RouteConf struct {
 	Method        string         `json:"method"`
 	Target        string         `json:"target"`
 	Timeout       string         `json:"timeout"`
-	IsAllowNoAuth int            `json:"is_allow_no_auth"`
+	IsAllowNoAuth bool           `json:"is_allow_no_auth"`
 	Protocol      string         `json:"protocol"`
 	Regexp        *regexp.Regexp `json:"-"`
 	CalleeMethod  string         `json:"-"`

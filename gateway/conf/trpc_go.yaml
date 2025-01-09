@@ -2,7 +2,7 @@ server:
   app: shortvideo
   server: gateway
   filter:
-    - routerFilter
+    - router_filter
   service:
     - name: trpc.shortvideo.gateway.Gateway
       ip: 127.0.0.1

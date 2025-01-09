@@ -5,11 +5,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"net/textproto"
+	"strings"
 	"time"
 
 	"github.com/Yamon955/ShortVideo/gateway/entity"
+	"github.com/google/uuid"
 	ctrpc "trpc.group/trpc-go/trpc-gateway/common/trpc"
 	"trpc.group/trpc-go/trpc-go/client"
 	"trpc.group/trpc-go/trpc-go/codec"
@@ -52,6 +55,8 @@ func forwardTRPC(w http.ResponseWriter, r *http.Request, routeConf *entity.Route
 		client.WithCurrentSerializationType(codec.SerializationTypeNoop), // 透传即可，无需进行序列化
 		client.WithCurrentCompressType(codec.CompressTypeNoop),           // 不要自动解压缩
 	}
+	// 后端服务可能用到的 metadata
+	opts = append(opts, getOpts(ctx, r)...)
 	rspBody := &codec.Body{}
 	if err := client.DefaultClient.Invoke(ctx, reqBody, rspBody, opts...); err != nil {
 		// err != nil 时，rsp.Body 会被清空
@@ -103,4 +108,36 @@ func transHTTPRsp(w http.ResponseWriter, _ *http.Request, rspBody *codec.Body) e
 		return err
 	}
 	return nil
+}
+
+// getOpts 后端服务可能用到的 metadata
+func getOpts(ctx context.Context, r *http.Request) (opts []client.Option) {
+	loginUID := getLoginUID(r)
+	tranceID := getTraceID(ctx, loginUID)
+	opts = []client.Option{
+		client.WithMetaData("sv_login_uid", []byte(loginUID)),
+		client.WithMetaData("sv_trace_id", []byte(tranceID)),
+	}
+	return
+}
+
+// getLoginUID 从 cookie 中获取 uid
+func getLoginUID(r *http.Request) string {
+	if r == nil {
+		return ""
+	}
+	loginUID, err := r.Cookie("sv_login_uid")
+	if err != nil {
+		return ""
+	}
+	return loginUID.Value
+}
+
+func getTraceID(ctx context.Context, uin string) string {
+	if uin == "" {
+		uuidWithHyphen := uuid.New()
+		uuid := strings.Replace(uuidWithHyphen.String(), "-", "", -1)
+		return fmt.Sprintf("%s_%d_%d", uuid, time.Now().UnixMilli(), rand.Uint32())
+	}
+	return fmt.Sprintf("%s_%d_%d", uin, time.Now().UnixMilli(), rand.Uint32())
 }
