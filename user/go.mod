@@ -1,20 +1,21 @@
 module github.com/Yamon955/ShortVideo/user
 
-go 1.22.0
+go 1.23.2
 
 require (
 	github.com/Yamon955/ShortVideo v0.0.0-20250103042040-3300eb9c4755
+	github.com/Yamon955/ShortVideo/comm v0.0.0-20250109031715-ffc59131319e
 	github.com/Yamon955/ShortVideo/protocol v0.0.0-20250108090952-e3b501a7db19
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/stretchr/testify v1.9.0
+	github.com/go-sql-driver/mysql v1.7.0
+	github.com/stretchr/testify v1.10.0
 	gorm.io/driver/mysql v1.5.7
 	trpc.group/trpc-go/trpc-go v1.0.3
 )
 
 require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/go-playground/form/v4 v4.2.0 // indirect
-	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect

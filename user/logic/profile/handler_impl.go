@@ -4,11 +4,11 @@ import (
 	"context"
 
 	"github.com/Yamon955/ShortVideo/base"
+	"github.com/Yamon955/ShortVideo/comm/utils"
 	"github.com/Yamon955/ShortVideo/protocol/user/pb"
 	"github.com/Yamon955/ShortVideo/user/entity/def"
 	"github.com/Yamon955/ShortVideo/user/entity/errcode"
 	"github.com/Yamon955/ShortVideo/user/repo/mysql"
-	"github.com/Yamon955/ShortVideo/user/utils"
 	MySQL "github.com/go-sql-driver/mysql"
 	"trpc.group/trpc-go/trpc-go"
 	"trpc.group/trpc-go/trpc-go/errs"

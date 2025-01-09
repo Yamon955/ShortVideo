@@ -3,7 +3,7 @@ package mysql
 import (
 	"context"
 
-	"github.com/Yamon955/ShortVideo/base"
+	"github.com/Yamon955/ShortVideo/comm/base"
 	"gorm.io/gorm"
 	"trpc.group/trpc-go/trpc-go/log"
 )
