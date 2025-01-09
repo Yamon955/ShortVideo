@@ -3,6 +3,7 @@ server:
   server: gateway
   filter:
     - router_filter
+    - auth_filter
   service:
     - name: trpc.shortvideo.gateway.Gateway
       ip: 127.0.0.1

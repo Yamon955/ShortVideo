@@ -4,7 +4,7 @@ package mysql
 import (
 	"context"
 
-	"github.com/Yamon955/ShortVideo/base"
+	"github.com/Yamon955/ShortVideo/comm/base"
 )
 
 // DBClient 数据库操作接口对象

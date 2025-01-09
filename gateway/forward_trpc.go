@@ -84,7 +84,7 @@ func transTRPCReqBody(ctx context.Context, r *http.Request) (*codec.Body, error)
 	}
 	serializationType, err := ctrpc.GetSerializationType(r.Header.Get(canonicalContentType))
 	if err != nil {
-		log.Errorf("GetSerializationType failed, err:%v", serializationType, err)
+		log.Errorf("GetSerializationType failed, err:%v", err)
 		return nil, errs.New(entity.ErrContentType, "invalid content type")
 	}
 	msg.WithSerializationType(serializationType)
@@ -112,10 +112,15 @@ func transHTTPRsp(w http.ResponseWriter, _ *http.Request, rspBody *codec.Body) e
 
 // getOpts 后端服务可能用到的 metadata
 func getOpts(ctx context.Context, r *http.Request) (opts []client.Option) {
-	loginUID := getLoginUID(r)
-	tranceID := getTraceID(ctx, loginUID)
+	loginUID := ctx.Value("sv_login_uid")
+	var uid string
+	if loginUID != nil {
+		uid = loginUID.(string)
+	}
+	tranceID := getTraceID(ctx, uid)
+	log.ErrorContextf(ctx, "uid[%s]", uid)
 	opts = []client.Option{
-		client.WithMetaData("sv_login_uid", []byte(loginUID)),
+		client.WithMetaData("sv_login_uid", []byte(uid)),
 		client.WithMetaData("sv_trace_id", []byte(tranceID)),
 	}
 	return
@@ -133,7 +138,7 @@ func getLoginUID(r *http.Request) string {
 	return loginUID.Value
 }
 
-func getTraceID(ctx context.Context, uin string) string {
+func getTraceID(_ context.Context, uin string) string {
 	if uin == "" {
 		uuidWithHyphen := uuid.New()
 		uuid := strings.Replace(uuidWithHyphen.String(), "-", "", -1)

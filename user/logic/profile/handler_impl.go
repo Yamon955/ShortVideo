@@ -3,7 +3,7 @@ package profile
 import (
 	"context"
 
-	"github.com/Yamon955/ShortVideo/base"
+	"github.com/Yamon955/ShortVideo/comm/base"
 	"github.com/Yamon955/ShortVideo/comm/utils"
 	"github.com/Yamon955/ShortVideo/protocol/user/pb"
 	"github.com/Yamon955/ShortVideo/user/entity/def"
@@ -99,7 +99,7 @@ func (h *handlerImpl) HandleSetProfile(
 				updateInfo["username"] = req.GetUsername()
 			}
 		case pb.PROFILE_TYPES_AVATOR:
-			if user.Avatar != req.GetAvator() {
+			if user.Avator != req.GetAvator() {
 				updateInfo["avatar"] = req.GetAvator()
 			}
 		case pb.PROFILE_TYPES_SIGN:
@@ -117,6 +117,7 @@ func (h *handlerImpl) HandleSetProfile(
 	}
 	// 更新用户信息
 	if err := h.db.UpdateUserInfo(ctx, req.GetUid(), updateInfo); err != nil {
+		log.ErrorContextf(ctx, "UpdateUserInfo failed, uid:%d, err:%v", req.GetUid(), err)
 		if mysqlErr, ok := err.(*MySQL.MySQLError); ok && mysqlErr.Number == def.MySQLErrCode_UsernameIsDuplicate {
 			return errs.New(errcode.ErrUsernameIsUsed, "用户名被占用")
 		}
@@ -132,7 +133,7 @@ func fillUserInfo(user *base.User, publishListCount int64, likedListCount int64,
 			MainPageInfo: &pb.MainPageInfo{
 				ID:       user.ID,
 				Username: user.Username,
-				Avator:   user.Avatar,
+				Avator:   user.Avator,
 				Sign:     user.Sign,
 				Gender:   user.Gender,
 			},

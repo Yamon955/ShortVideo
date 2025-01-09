@@ -42,7 +42,7 @@ func Init() error {
 
 	var routeConfs []entity.RouteConf
 	byteValue, _ := ioutil.ReadAll(jsonFile)
-	json.Unmarshal(byteValue, &routeConfs)
+	_ = json.Unmarshal(byteValue, &routeConfs)
 
 	// build radixTree
 	tree := radix.New()

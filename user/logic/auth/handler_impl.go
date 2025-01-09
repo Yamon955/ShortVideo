@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/Yamon955/ShortVideo/base"
+	"github.com/Yamon955/ShortVideo/comm/base"
 	"github.com/Yamon955/ShortVideo/comm/utils"
 	"github.com/Yamon955/ShortVideo/protocol/user/pb"
 	"github.com/Yamon955/ShortVideo/user/entity/conf"
@@ -27,7 +27,7 @@ func (h *handlerImpl) HandleRegister(ctx context.Context, req *pb.RegisterReq) e
 	username := req.GetUsername()
 	password := req.GetPassword()
 	// 检查用户名和密码是否合法
-	err := checkUsernameAndPassword(username, password)
+	err := checkUsernameAndPassword(ctx, username, password)
 	if err != nil {
 		return err
 	}
@@ -46,7 +46,7 @@ func (h *handlerImpl) HandleLogin(ctx context.Context, req *pb.LoginReq, rsp *pb
 	username := req.GetUsername()
 	password := req.GetPassword()
 	// 检查用户名和密码是否合法
-	if err := checkUsernameAndPassword(username, password); err != nil {
+	if err := checkUsernameAndPassword(ctx, username, password); err != nil {
 		return err
 	}
 	user, err := h.db.FindUserByUsername(ctx, username)
@@ -72,13 +72,13 @@ func (h *handlerImpl) HandleLogin(ctx context.Context, req *pb.LoginReq, rsp *pb
 }
 
 // checkUsernameAndPassword 检查用户名和密码长度是否合法
-func checkUsernameAndPassword(username string, password string) error {
+func checkUsernameAndPassword(ctx context.Context, username string, password string) error {
 	if len(username) == 0 || len(username) > def.MAX_LEN {
-		log.Errorf("username[%s] is invalid", password)
+		log.ErrorContextf(ctx, "username[%s] is invalid", password)
 		return errs.New(errcode.ErrUsername, "用户名不能为空或者超过24个字符(8个汉字)")
 	}
 	if len(password) < def.PWD_MIN_LEN || len(password) > def.MAX_LEN {
-		log.Errorf("password[%s] is invalid", password)
+		log.ErrorContextf(ctx, "password[%s] is invalid", password)
 		return errs.New(errcode.ErrPassword, "请输入8-24位密码")
 	}
 	return nil
@@ -89,7 +89,7 @@ func createUser(username string, pwd string) *base.User {
 	return &base.User{
 		Username:     username,
 		Password:     utils.Md5(pwd),
-		Avatar:       conf.AppConf.UserDefaultConf.Avator,
+		Avator:       conf.AppConf.UserDefaultConf.Avator,
 		Sign:         conf.AppConf.UserDefaultConf.Sign,
 		RegisterTime: time.Now().Unix(),
 	}

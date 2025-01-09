@@ -18,9 +18,9 @@ build:
 # 运行目标
 run:
 	@echo "Running the server..."
-	nohup ./$(SERVER) --conf=$(CONFIG_FILE) > $(LOG_FILE) 2>&1 &
+	@nohup ./$(SERVER) --conf=$(CONFIG_FILE) > $(LOG_FILE) 2>&1 &
 	@echo "Checking if the service started successfully..."
-	if pgrep -f "$(SERVER)" > /dev/null; then \
+	@if pgrep -f "$(SERVER)" > /dev/null; then \
 		echo "Service started successfully."; \
 	else \
 		echo "Failed to start service."; \

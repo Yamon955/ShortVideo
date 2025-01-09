@@ -2,14 +2,15 @@ package main
 
 import (
 	"context"
+	"strconv"
 
-	"github.com/Yamon955/ShortVideo/comm/utils"
 	"github.com/Yamon955/ShortVideo/gateway/entity"
 	"github.com/Yamon955/ShortVideo/gateway/repo/auth"
 	"github.com/Yamon955/ShortVideo/gateway/repo/router"
 	"trpc.group/trpc-go/trpc-go/errs"
 	"trpc.group/trpc-go/trpc-go/filter"
 	thttp "trpc.group/trpc-go/trpc-go/http"
+	"trpc.group/trpc-go/trpc-go/log"
 )
 
 // routerFilter 路由 filter 需要放在依赖 entity.Router 的 filter 前面
@@ -36,13 +37,15 @@ func authFilter() filter.ServerFilter {
 		}
 		// 允许无登录态请求的服务接口，无需校验，直接放行
 		if isAllowNoAuth {
+			log.InfoContextf(ctx, "no auth, req.path:%s", routeConf.Path)
 			return next(ctx, req)
 		}
-		token := thttp.Head(ctx).Request.Header.Get(utils.SignKey)
-		verifySuc, err := auth.VerifyJWT(ctx, token)
+		log.InfoContextf(ctx, "check auth, req.path:%s", routeConf.Path)
+		token := thttp.Head(ctx).Request.Header.Get("Authorization")
+		verifySuc, loginUID, err := auth.VerifyJWT(ctx, token)
 		if err != nil || !verifySuc {
 			return rsp, errs.New(entity.ErrVerifAuthFail, "invalid token")
 		}
-		return next(ctx, req)
+		return next(context.WithValue(ctx, "sv_login_uid", strconv.FormatUint(loginUID, 10)), req)
 	}
 }
