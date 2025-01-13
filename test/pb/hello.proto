@@ -1,11 +1,13 @@
 syntax = "proto3";
 package trpc.shortvideo.test;
 
+import "trpc/proto/trpc_options.proto";
+
 option go_package = "github.com/Yamon955/ShortVideo/test/pb";
 
 // HelloRequest is hello request.
 message HelloRequest {
-  bytes msg = 1;
+  bytes msg = 1[(trpc.go_tag) = 'form:"msg"'];
 }
 
 // HelloResponse is hello response.
