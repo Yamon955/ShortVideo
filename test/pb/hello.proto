@@ -7,7 +7,9 @@ option go_package = "github.com/Yamon955/ShortVideo/test/pb";
 
 // HelloRequest is hello request.
 message HelloRequest {
-  bytes msg = 1[(trpc.go_tag) = 'form:"msg"'];
+  bytes data = 1[(trpc.go_tag) = 'form:"data"'];
+  string username = 2[(trpc.go_tag) = 'form:"username"'];
+  uint64 uid = 3[(trpc.go_tag) = 'form:"uid"'];
 }
 
 // HelloResponse is hello response.
