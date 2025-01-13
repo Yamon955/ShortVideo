@@ -1,0 +1,51 @@
+syntax="proto3";
+package trpc.shortvideo.video;
+
+
+option go_package = "github.com/Yamon955/ShortVideo/protocol/video/pb";
+
+service Video {
+    rpc GetFeeds(GetFeedsReq) returns (GetFeedsRsp);
+    rpc Publish(PublishReq) returns (PublishRsp);
+    rpc GetPublishList(GetPublishListReq) returns (GetPublishListRsp);
+}
+
+enum VIDEO_TAGS {
+    ENTERTAINMENT = 1; // 娱乐
+    MUSIC = 2;         // 音乐
+    LIFESTYLE = 3;     // 生活
+    EDUCATION = 4;     // 教育
+    TECHNOLOGY = 5     // 科技
+    Fashion = 6;       // 时尚
+    SPORTS = 7;        // 运动
+    AUTOMOTIVE = 8;    // 汽车
+    ART = 9;           // 艺术
+    NEWS = 10;         // 新闻
+    GAMING = 11;       // 游戏
+    HEALTH = 12;       // 健康
+    DIY = 13;          // DIY
+    CULTURE = 14;      // 文化
+    BUSINESS = 15;     // 商业
+}
+
+message GetFeedsReq {
+    
+}
+message GetFeedsRsp {
+
+}
+
+message PublishReq {
+    
+
+}
+message PublishRsp {
+    
+}
+
+message GetPublishListReq {
+
+}
+message GetPublishListRsp {
+    
+}
