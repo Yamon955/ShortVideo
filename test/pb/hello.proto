@@ -1,5 +1,5 @@
 syntax = "proto3";
-package trpc.test.service1;
+package trpc.shortvideo.test;
 
 option go_package = "github.com/Yamon955/ShortVideo/test/pb";
 
