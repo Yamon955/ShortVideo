@@ -4,4 +4,5 @@ build:
 		--protocol trpc \
 		--rpconly \
 		--nogomod \
-		--mock=false
+		--mock=false \
+		--gotag
