@@ -6,7 +6,8 @@
         "method": "/trpc.test.service1.HelloWorldService/Hello",
         "target": "ip://127.0.0.1:8080",
         "timeout": "2s",
-        "protocol": "trpc"
+        "protocol": "trpc",
+        "is_allow_no_auth": true
     },
     {
         "path": "/test/caculator",
@@ -15,7 +16,18 @@
         "method": "/trpc.test.caculator.Caculator/Caculate",
         "target": "ip://127.0.0.1:9000",
         "timeout": "2s",
-        "protocol": "trpc"
+        "protocol": "trpc",
+        "is_allow_no_auth": true
+    },
+    {
+        "path": "/shortvideo/test",
+        "is_regex": "0",
+        "service": "trpc.shortvideo.test.HelloWorldService",
+        "method": "/trpc.shortvideo.test.HelloWorldService/Hello",
+        "target": "ip://127.0.0.1:10011",
+        "timeout": "2s",
+        "protocol": "http",
+        "is_allow_no_auth": true
     },
     {
         "path": "/shortvideo/user/register",
