@@ -11,11 +11,12 @@ service Video {
 }
 
 enum VIDEO_TAGS {
-    ENTERTAINMENT = 1; // 娱乐
+    ENTERTAINMENT = 0; // 娱乐
+    BUSINESS = 1;      // 商业
     MUSIC = 2;         // 音乐
     LIFESTYLE = 3;     // 生活
     EDUCATION = 4;     // 教育
-    TECHNOLOGY = 5     // 科技
+    TECHNOLOGY = 5;    // 科技
     Fashion = 6;       // 时尚
     SPORTS = 7;        // 运动
     AUTOMOTIVE = 8;    // 汽车
@@ -25,14 +26,12 @@ enum VIDEO_TAGS {
     HEALTH = 12;       // 健康
     DIY = 13;          // DIY
     CULTURE = 14;      // 文化
-    BUSINESS = 15;     // 商业
 }
 
 message GetFeedsReq {
     
 }
 message GetFeedsRsp {
-
 }
 
 message PublishReq {
@@ -40,7 +39,8 @@ message PublishReq {
 
 }
 message PublishRsp {
-    
+    int64 status_code = 1;
+    string status_msg = 2;
 }
 
 message GetPublishListReq {
