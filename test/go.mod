@@ -3,8 +3,10 @@ module github.com/Yamon955/ShortVideo/test
 go 1.23.2
 
 require (
+	github.com/gorilla/schema v1.4.1
 	google.golang.org/protobuf v1.33.0
 	trpc.group/trpc-go/trpc-go v1.0.3
+	trpc.group/trpc/trpc-protocol/pb/go/trpc v1.0.0
 )
 
 require (
@@ -37,5 +39,4 @@ require (
 	golang.org/x/text v0.13.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	trpc.group/trpc-go/tnet v1.0.1 // indirect
-	trpc.group/trpc/trpc-protocol/pb/go/trpc v1.0.0 // indirect
 )
