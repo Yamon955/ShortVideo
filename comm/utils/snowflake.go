@@ -9,7 +9,8 @@ import (
 
 var (
 	sonyFlake *sonyflake.Sonyflake
-	startTime = time.Date(2019, 1, 1, 0, 0, 0, 0, time.UTC)
+	// 雪花算法最多支持到 startTime + 69 年
+	startTime = time.Date(2023, 1, 1, 0, 0, 0, 0, time.UTC)
 )
 
 // Init 使用当前机器 ID 初始化雪花算法生成器
