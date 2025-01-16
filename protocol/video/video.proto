@@ -41,6 +41,7 @@ message PublishReq {
 message PublishRsp {
     int64 status_code = 1;
     string status_msg = 2;
+    uint64 vid = 3;
 }
 
 message GetPublishListReq {
