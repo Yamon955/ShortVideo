@@ -25,7 +25,7 @@
         "service": "trpc.shortvideo.test.HelloWorldService",
         "method": "/trpc.shortvideo.test.HelloWorldService/Hello",
         "target": "ip://127.0.0.1:10011",
-        "timeout": "2s",
+        "timeout": "5s",
         "protocol": "http",
         "is_allow_no_auth": true
     },
