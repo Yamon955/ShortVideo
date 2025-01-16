@@ -5,6 +5,7 @@ go 1.23.2
 require (
 	github.com/Yamon955/ShortVideo/user v0.0.0-20250108121911-d39a21407197
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/sony/sonyflake v1.2.0
 	github.com/stretchr/testify v1.10.0
 	trpc.group/trpc-go/trpc-go v1.0.3
 )
