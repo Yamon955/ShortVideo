@@ -58,6 +58,7 @@ func forwardTRPC(w http.ResponseWriter, r *http.Request, routeConf *entity.Route
 	// 后端服务可能用到的 metadata
 	opts = append(opts, getOpts(ctx, r)...)
 	rspBody := &codec.Body{}
+	log.InfoContextf(ctx, "URL:%s forward success", r.URL.Path)
 	if err := client.DefaultClient.Invoke(ctx, reqBody, rspBody, opts...); err != nil {
 		// err != nil 时，rsp.Body 会被清空
 		rsp := &errRsp{
@@ -66,7 +67,7 @@ func forwardTRPC(w http.ResponseWriter, r *http.Request, routeConf *entity.Route
 		}
 		rspBody.Data, _ = json.Marshal(rsp)
 	}
-	if err := transHTTPRsp(w, r, rspBody); err != nil {
+	if err := transTRPCRsp(w, r, rspBody); err != nil {
 		return errs.New(entity.ErrTransHTTPRsp, "trpc.rsp trans to http.rsp err")
 	}
 	return nil
@@ -97,8 +98,8 @@ func transTRPCReqBody(ctx context.Context, r *http.Request) (*codec.Body, error)
 	return reqBody, nil
 }
 
-// transHTTPRsp trpc.rsp -> http.rsp
-func transHTTPRsp(w http.ResponseWriter, _ *http.Request, rspBody *codec.Body) error {
+// transTRPCRsp trpc.rsp -> http.rsp
+func transTRPCRsp(w http.ResponseWriter, _ *http.Request, rspBody *codec.Body) error {
 	defaultContentType := "application/json"
 	w.Header().Set(canonicalContentType, defaultContentType)
 	w.Header().Set(canonicalContentLength, fmt.Sprintf("%d", len(rspBody.Data)))

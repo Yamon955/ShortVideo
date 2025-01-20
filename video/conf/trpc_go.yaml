@@ -1,0 +1,30 @@
+server:
+  app: shortvideo
+  server: test
+  service:
+    # 基本视频服务，获取feeds推荐列表，获取发布列表
+    - name: trpc.shortvideo.video.Video
+      network: tcp
+      protocol: trpc
+      timeout: 20000
+      port: 30001
+    # 发布上传服务--- HTTP服务
+    - name: trpc.shortvideo.video.Publish
+      network: tcp
+      protocol: http # 泛 HTTP 标准服务
+      timeout: 20000
+      port: 30002
+
+plugins:
+  log:
+    default:
+      - writer: file #本地文件日志
+        level: INFO #本地文件滚动日志的级别
+        writer_config: #本地文件输出具体配置
+          log_path: ./ #本地文件日志路径
+          filename: trpc.log #本地文件日志文件名
+          roll_type: size #文件滚动类型,size为按大小滚动
+          max_age: 7 #最大日志保留天数
+          max_size: 1000 #本地文件滚动日志的大小 单位 MB
+          max_backups: 15 #最大日志文件数
+          compress: false #日志文件是否压缩
