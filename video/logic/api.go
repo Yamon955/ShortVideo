@@ -17,6 +17,7 @@ type Handler interface {
 func NewHandler() Handler {
 	return &handlerImpl{
 		Downloader: downloader.NewMediaFileDownloader(),
+		Uploader:   uploader.NewMediaFileUploader(),
 	}
 }
 

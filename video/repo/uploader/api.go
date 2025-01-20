@@ -10,7 +10,7 @@ type MediaFileUploadReq struct {
 	VID  uint64
 	Data []byte
 	Size int64
-	tags []int
+	Tags []string
 }
 
 // MediaFileUploader 文件上传器

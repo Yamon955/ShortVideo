@@ -38,9 +38,14 @@ func (h *handlerImpl) HandlePublish(ctx context.Context, req *pb.PublishReq) (*p
 		UID:  uid,
 		Data: videoFile.Data,
 		Size: videoFile.Size,
+		Tags: tags,
 	}
 	vid, err := h.Uploader.VideoUpload(ctx, uploadReq)
-
+	if err != nil {
+		log.ErrorContextf(ctx, "VideoUpload failed, err:%v", err)
+		return nil, errs.New(errcode.ErrPublishFailed, "上传失败,请稍后重试!")
+	}
+	log.Infof("uid:%d, VideoUpload success. vid:%v", uid, vid)
 	return &pb.PublishRsp{}, nil
 }
 
