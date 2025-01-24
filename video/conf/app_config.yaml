@@ -1,0 +1,14 @@
+mysql:
+  address: "localhost"
+  port: "3306"
+  user: "admin"
+  pwd: "123123"
+  db_name: "sv"
+  max_open_conns: 1000
+  max_idle_conns: 50
+
+redis:
+  address: "localhost"
+  port: 6379
+  password: ""
+  db: 0
