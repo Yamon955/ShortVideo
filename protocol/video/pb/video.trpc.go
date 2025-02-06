@@ -21,8 +21,6 @@ import (
 type VideoService interface {
 	GetFeeds(ctx context.Context, req *GetFeedsReq) (*GetFeedsRsp, error)
 
-	Publish(ctx context.Context, req *PublishReq) (*PublishRsp, error)
-
 	GetPublishList(ctx context.Context, req *GetPublishListReq) (*GetPublishListRsp, error)
 }
 
@@ -34,24 +32,6 @@ func VideoService_GetFeeds_Handler(svr interface{}, ctx context.Context, f serve
 	}
 	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
 		return svr.(VideoService).GetFeeds(ctx, reqbody.(*GetFeedsReq))
-	}
-
-	var rsp interface{}
-	rsp, err = filters.Filter(ctx, req, handleFunc)
-	if err != nil {
-		return nil, err
-	}
-	return rsp, nil
-}
-
-func VideoService_Publish_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
-	req := &PublishReq{}
-	filters, err := f(req)
-	if err != nil {
-		return nil, err
-	}
-	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
-		return svr.(VideoService).Publish(ctx, reqbody.(*PublishReq))
 	}
 
 	var rsp interface{}
@@ -90,10 +70,6 @@ var VideoServer_ServiceDesc = server.ServiceDesc{
 			Func: VideoService_GetFeeds_Handler,
 		},
 		{
-			Name: "/trpc.shortvideo.video.Video/Publish",
-			Func: VideoService_Publish_Handler,
-		},
-		{
 			Name: "/trpc.shortvideo.video.Video/GetPublishList",
 			Func: VideoService_GetPublishList_Handler,
 		},
@@ -107,6 +83,48 @@ func RegisterVideoService(s server.Service, svr VideoService) {
 	}
 }
 
+// PublishService defines service.
+type PublishService interface {
+	Publish(ctx context.Context, req *PublishReq) (*PublishRsp, error)
+}
+
+func PublishService_Publish_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &PublishReq{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(PublishService).Publish(ctx, reqbody.(*PublishReq))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// PublishServer_ServiceDesc descriptor for server.RegisterService.
+var PublishServer_ServiceDesc = server.ServiceDesc{
+	ServiceName: "trpc.shortvideo.video.Publish",
+	HandlerType: ((*PublishService)(nil)),
+	Methods: []server.Method{
+		{
+			Name: "/trpc.shortvideo.video.Publish/Publish",
+			Func: PublishService_Publish_Handler,
+		},
+	},
+}
+
+// RegisterPublishService registers service.
+func RegisterPublishService(s server.Service, svr PublishService) {
+	if err := s.Register(&PublishServer_ServiceDesc, svr); err != nil {
+		panic(fmt.Sprintf("Publish register error:%v", err))
+	}
+}
+
 // START --------------------------------- Default Unimplemented Server Service --------------------------------- START
 
 type UnimplementedVideo struct{}
@@ -114,11 +132,14 @@ type UnimplementedVideo struct{}
 func (s *UnimplementedVideo) GetFeeds(ctx context.Context, req *GetFeedsReq) (*GetFeedsRsp, error) {
 	return nil, errors.New("rpc GetFeeds of service Video is not implemented")
 }
-func (s *UnimplementedVideo) Publish(ctx context.Context, req *PublishReq) (*PublishRsp, error) {
-	return nil, errors.New("rpc Publish of service Video is not implemented")
-}
 func (s *UnimplementedVideo) GetPublishList(ctx context.Context, req *GetPublishListReq) (*GetPublishListRsp, error) {
 	return nil, errors.New("rpc GetPublishList of service Video is not implemented")
+}
+
+type UnimplementedPublish struct{}
+
+func (s *UnimplementedPublish) Publish(ctx context.Context, req *PublishReq) (*PublishRsp, error) {
+	return nil, errors.New("rpc Publish of service Publish is not implemented")
 }
 
 // END --------------------------------- Default Unimplemented Server Service --------------------------------- END
@@ -130,8 +151,6 @@ func (s *UnimplementedVideo) GetPublishList(ctx context.Context, req *GetPublish
 // VideoClientProxy defines service client proxy
 type VideoClientProxy interface {
 	GetFeeds(ctx context.Context, req *GetFeedsReq, opts ...client.Option) (rsp *GetFeedsRsp, err error)
-
-	Publish(ctx context.Context, req *PublishReq, opts ...client.Option) (rsp *PublishRsp, err error)
 
 	GetPublishList(ctx context.Context, req *GetPublishListReq, opts ...client.Option) (rsp *GetPublishListRsp, err error)
 }
@@ -165,26 +184,6 @@ func (c *VideoClientProxyImpl) GetFeeds(ctx context.Context, req *GetFeedsReq, o
 	return rsp, nil
 }
 
-func (c *VideoClientProxyImpl) Publish(ctx context.Context, req *PublishReq, opts ...client.Option) (*PublishRsp, error) {
-	ctx, msg := codec.WithCloneMessage(ctx)
-	defer codec.PutBackMessage(msg)
-	msg.WithClientRPCName("/trpc.shortvideo.video.Video/Publish")
-	msg.WithCalleeServiceName(VideoServer_ServiceDesc.ServiceName)
-	msg.WithCalleeApp("shortvideo")
-	msg.WithCalleeServer("video")
-	msg.WithCalleeService("Video")
-	msg.WithCalleeMethod("Publish")
-	msg.WithSerializationType(codec.SerializationTypePB)
-	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
-	callopts = append(callopts, c.opts...)
-	callopts = append(callopts, opts...)
-	rsp := &PublishRsp{}
-	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
-		return nil, err
-	}
-	return rsp, nil
-}
-
 func (c *VideoClientProxyImpl) GetPublishList(ctx context.Context, req *GetPublishListReq, opts ...client.Option) (*GetPublishListRsp, error) {
 	ctx, msg := codec.WithCloneMessage(ctx)
 	defer codec.PutBackMessage(msg)
@@ -199,6 +198,40 @@ func (c *VideoClientProxyImpl) GetPublishList(ctx context.Context, req *GetPubli
 	callopts = append(callopts, c.opts...)
 	callopts = append(callopts, opts...)
 	rsp := &GetPublishListRsp{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+// PublishClientProxy defines service client proxy
+type PublishClientProxy interface {
+	Publish(ctx context.Context, req *PublishReq, opts ...client.Option) (rsp *PublishRsp, err error)
+}
+
+type PublishClientProxyImpl struct {
+	client client.Client
+	opts   []client.Option
+}
+
+var NewPublishClientProxy = func(opts ...client.Option) PublishClientProxy {
+	return &PublishClientProxyImpl{client: client.DefaultClient, opts: opts}
+}
+
+func (c *PublishClientProxyImpl) Publish(ctx context.Context, req *PublishReq, opts ...client.Option) (*PublishRsp, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/trpc.shortvideo.video.Publish/Publish")
+	msg.WithCalleeServiceName(PublishServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("shortvideo")
+	msg.WithCalleeServer("video")
+	msg.WithCalleeService("Publish")
+	msg.WithCalleeMethod("Publish")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &PublishRsp{}
 	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
 		return nil, err
 	}

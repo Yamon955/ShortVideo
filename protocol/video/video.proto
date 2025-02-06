@@ -6,8 +6,11 @@ option go_package = "github.com/Yamon955/ShortVideo/protocol/video/pb";
 
 service Video {
     rpc GetFeeds(GetFeedsReq) returns (GetFeedsRsp);
-    rpc Publish(PublishReq) returns (PublishRsp);
     rpc GetPublishList(GetPublishListReq) returns (GetPublishListRsp);
+}
+
+service Publish {
+    rpc Publish(PublishReq) returns (PublishRsp);
 }
 
 enum VIDEO_TAGS {
