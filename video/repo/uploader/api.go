@@ -2,14 +2,16 @@ package uploader
 
 import (
 	"context"
+	"mime/multipart"
+
+	"github.com/Yamon955/ShortVideo/video/repo/minio"
 )
 
 // MediaFileUploadReq 媒体文件上传所需内容
 type MediaFileUploadReq struct {
 	UID  uint64
 	VID  uint64
-	Data []byte
-	Size int64
+	File multipart.File
 	Tags []string
 }
 
@@ -21,5 +23,7 @@ type MediaFileUploader interface {
 
 // NewMediaFileUploader 创建上传器对象
 func NewMediaFileUploader() MediaFileUploader {
-	return &uploaderImpl{}
+	return &uploaderImpl{
+		MinIOClient: minio.GetClient(),
+	}
 }

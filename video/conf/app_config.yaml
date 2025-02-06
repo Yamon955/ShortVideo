@@ -12,3 +12,9 @@ redis:
   port: 6379
   password: ""
   db: 0
+
+minio:
+  endpoint: "9.135.140.32:9090"
+  access_key_id: "minioadmin"
+  secret_access_key: "minioadmin"
+

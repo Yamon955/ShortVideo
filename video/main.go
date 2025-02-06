@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/Yamon955/ShortVideo/protocol/video/pb"
 	"github.com/Yamon955/ShortVideo/video/entity/conf"
+	"github.com/Yamon955/ShortVideo/video/repo/minio"
 	"github.com/Yamon955/ShortVideo/video/repo/redis"
 	"trpc.group/trpc-go/trpc-go"
 	"trpc.group/trpc-go/trpc-go/codec"
@@ -16,6 +17,9 @@ func init() {
 		panic(err)
 	}
 	if err := redis.Init(); err != nil {
+		panic(err)
+	}
+	if err := minio.Init(); err != nil {
 		panic(err)
 	}
 }

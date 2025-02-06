@@ -35,6 +35,12 @@ type RedisConf struct {
 	DB       int    `mapstructure:"db"`
 }
 
+type MinIOConf struct {
+	Endpoint        string `mapstructure:"endpoint"`
+	AccessKeyID     string `mapstructure:"access_key_id"`
+	SecretAccessKey string `mapstructure:"secret_access_key"`
+}
+
 var AppConf *AppConfig
 
 // GetAppConfig 获取 APP 配置对象
