@@ -12,8 +12,18 @@ type videoSvrImpl struct {
 	handler logic.Handler
 }
 
+func newVideoSvr() *videoSvrImpl {
+	return &videoSvrImpl{
+		handler: logic.NewHandler(),
+	}
+}
+
 func (v *videoSvrImpl) GetFeeds(ctx context.Context, req *pb.GetFeedsReq) (*pb.GetFeedsRsp, error) {
 	return &pb.GetFeedsRsp{}, nil
+}
+
+func (v *videoSvrImpl) GetPublishList(ctx context.Context, req *pb.GetPublishListReq) (*pb.GetPublishListRsp, error) {
+	return &pb.GetPublishListRsp{}, nil
 }
 
 func (v *videoSvrImpl) Publish(ctx context.Context, req *pb.PublishReq) (*pb.PublishRsp, error) {
@@ -23,8 +33,4 @@ func (v *videoSvrImpl) Publish(ctx context.Context, req *pb.PublishReq) (*pb.Pub
 		return nil, err
 	}
 	return rsp, nil
-}
-
-func (v *videoSvrImpl) GetPublishList(ctx context.Context, req *pb.GetPublishListReq) (*pb.GetPublishListRsp, error) {
-	return &pb.GetPublishListRsp{}, nil
 }

@@ -8,13 +8,14 @@ mysql:
   max_idle_conns: 50
 
 redis:
-  address: "localhost"
+  address: "127.0.0.1:6379"
   port: 6379
   password: ""
   db: 0
 
 minio:
-  endpoint: "9.135.140.32:9090"
+  endpoint: "127.0.0.1"
+  port: 9000
   access_key_id: "minioadmin"
   secret_access_key: "minioadmin"
 

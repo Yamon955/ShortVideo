@@ -8,7 +8,7 @@ CONFIG_FILE=./conf/trpc_go.yaml
 LOG_FILE=start.log
 
 # 默认目标
-all: stop build run clean
+all: stop build run
 
 # 构建目标
 build:

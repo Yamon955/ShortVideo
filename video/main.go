@@ -1,8 +1,12 @@
 package main
 
 import (
+	"context"
+
+	"github.com/Yamon955/ShortVideo/comm/utils"
 	"github.com/Yamon955/ShortVideo/protocol/video/pb"
 	"github.com/Yamon955/ShortVideo/video/entity/conf"
+	"github.com/Yamon955/ShortVideo/video/entity/def"
 	"github.com/Yamon955/ShortVideo/video/repo/minio"
 	"github.com/Yamon955/ShortVideo/video/repo/redis"
 	"trpc.group/trpc-go/trpc-go"
@@ -22,13 +26,25 @@ func init() {
 	if err := minio.Init(); err != nil {
 		panic(err)
 	}
+	if err := utils.Init(getMachineID()); err != nil {
+		panic(err)
+	}
 }
 
 func main() {
 	s := trpc.NewServer()
-	pb.RegisterVideoService(s, &videoSvrImpl{})
+
+	pb.RegisterVideoService(s.Service("trpc.shortvideo.video.Video"), newVideoSvr())
+	pb.RegisterPublishService(s.Service("trpc.shortvideo.video.Publish"), newVideoSvr())
 
 	if err := s.Serve(); err != nil {
 		panic(err)
 	}
+}
+
+// getMachineID 获取机器 ID 用于雪花算法生成 uuid
+func getMachineID() uint16 {
+	machineID := redis.GetClient().Incr(context.Background(), def.MachineID).Val()
+	machineID %= 1024
+	return uint16(machineID)
 }

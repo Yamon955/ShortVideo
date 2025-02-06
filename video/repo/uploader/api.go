@@ -10,7 +10,6 @@ import (
 // MediaFileUploadReq 媒体文件上传所需内容
 type MediaFileUploadReq struct {
 	UID  uint64
-	VID  uint64
 	File multipart.File
 	Tags []string
 }

@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/Yamon955/ShortVideo/comm/utils"
 	"github.com/Yamon955/ShortVideo/video/entity/def"
 	"github.com/Yamon955/ShortVideo/video/entity/errcode"
 	"github.com/minio/minio-go/v7"
@@ -34,6 +35,8 @@ func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq)
 		log.ErrorContextf(ctx, "ioutil.ReadAll failed, err: %v", err)
 		return 0, err
 	}
+	// 雪花算法生成 vid
+	vid := utils.GenID()
 	// 判断文件类型
 	contentType = http.DetectContentType(contentBytes)
 	if !strings.HasPrefix(contentType, "video") {
@@ -41,15 +44,30 @@ func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq)
 	}
 	videoBuffer = bytes.NewBuffer(contentBytes)
 	imgBuffer = bytes.NewBuffer(nil)
-	// ffmpeg 提去首帧图片
+
+	// ffmpeg 提取首帧图片
 
 	_, err = u.MinIOClient.PutObject(ctx,
 		def.MinIOBucketName,
-		fmt.Sprintf("video/%d/video", req.VID),
+		fmt.Sprintf("video/%d/video", vid),
 		videoBuffer,
-		int64(imgBuffer.Len()),
+		int64(videoBuffer.Len()),
 		minio.PutObjectOptions{
 			ContentType: contentType,
+		},
+	)
+	if err != nil {
+		log.ErrorContextf(ctx, "minioClient.PutObject failed, err: %v", err)
+		return 0, err
+	}
+
+	_, err = u.MinIOClient.PutObject(ctx,
+		def.MinIOBucketName,
+		fmt.Sprintf("video/%d/cover", vid),
+		imgBuffer,
+		int64(imgBuffer.Len()),
+		minio.PutObjectOptions{
+			ContentType: "image/jpeg",
 		},
 	)
 	if err != nil {
