@@ -38,6 +38,7 @@ func init() {
 func main() {
 	s := trpc.NewServer()
 
+	// 注册两个不同协议的服务
 	pb.RegisterVideoService(s.Service("trpc.shortvideo.video.Video"), newVideoSvr())
 	pb.RegisterPublishService(s.Service("trpc.shortvideo.video.Publish"), newVideoSvr())
 
