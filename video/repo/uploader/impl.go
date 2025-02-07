@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/Yamon955/ShortVideo/comm/base"
 	"github.com/Yamon955/ShortVideo/comm/utils"
 	"github.com/Yamon955/ShortVideo/video/entity/def"
 	"github.com/Yamon955/ShortVideo/video/entity/errcode"
@@ -76,5 +77,14 @@ func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq)
 		log.ErrorContextf(ctx, "minioClient put cover object failed, err: %v", err)
 		return 0, err
 	}
+
+	videoInfo := &base.Video{
+		UID:      req.UID,
+		VID:      vid,
+		VideoURL: playUrl,
+		CoverURL: coverUrl,
+		Title:    req.Title,
+	}
+
 	return vid, nil
 }

@@ -9,9 +9,10 @@ import (
 
 // MediaFileUploadReq 媒体文件上传所需内容
 type MediaFileUploadReq struct {
-	UID  uint64
-	File multipart.File
-	Tags []string
+	UID   uint64
+	File  multipart.File
+	Title string
+	Tags  []string
 }
 
 // MediaFileUploader 文件上传器
