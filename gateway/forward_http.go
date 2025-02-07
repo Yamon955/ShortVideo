@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -46,7 +47,12 @@ func forwardHTTP(w http.ResponseWriter, r *http.Request, routerConf *entity.Rout
 		client.WithCurrentCompressType(codec.CompressTypeNoop),
 	}
 	if err = client.DefaultClient.Invoke(ctx, reqBody, rspBody, opts...); err != nil {
-		return err
+		// err != nil 时，rsp.Body 会被清空
+		rsp := &errRsp{
+			Code: int(errs.Code(err)),
+			Msg:  errs.Msg(err),
+		}
+		rspBody.Data, _ = json.Marshal(rsp)
 	}
 	if err = transHTTPRsp(w, rsphead, rspBody); err != nil {
 		log.Errorf("transHTTPRsp failed, err:%v", err)

@@ -35,14 +35,14 @@ func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq)
 	contentBytes, err = io.ReadAll(req.File)
 	if err != nil {
 		log.ErrorContextf(ctx, "ioutil.ReadAll failed, err: %v", err)
-		return 0, err
+		return nil, err
 	}
 	// 雪花算法生成 vid
 	vid := utils.GenID()
 	// 判断文件类型
 	contentType = http.DetectContentType(contentBytes)
 	if !strings.HasPrefix(contentType, "video") {
-		return 0, errs.New(errcode.ErrNotVideoType, "非视频文件")
+		return nil, errs.New(errcode.ErrNotVideoType, "非视频文件")
 	}
 	videoBuffer = bytes.NewBuffer(contentBytes)
 	imgBuffer = bytes.NewBuffer(nil)
@@ -61,7 +61,7 @@ func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq)
 	)
 	if err != nil {
 		log.ErrorContextf(ctx, "minioClient put video object failed, err: %v", err)
-		return 0, err
+		return nil, err
 	}
 
 	coverUrl := fmt.Sprintf("video/VID_%d/cover.jpeg", vid)
@@ -76,7 +76,7 @@ func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq)
 	)
 	if err != nil {
 		log.ErrorContextf(ctx, "minioClient put cover object failed, err: %v", err)
-		return 0, err
+		return nil, err
 	}
 
 	videoInfo := &base.Video{

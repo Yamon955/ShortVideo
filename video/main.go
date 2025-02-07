@@ -8,6 +8,7 @@ import (
 	"github.com/Yamon955/ShortVideo/video/entity/conf"
 	"github.com/Yamon955/ShortVideo/video/entity/def"
 	"github.com/Yamon955/ShortVideo/video/repo/minio"
+	"github.com/Yamon955/ShortVideo/video/repo/mysql"
 	"github.com/Yamon955/ShortVideo/video/repo/redis"
 	"trpc.group/trpc-go/trpc-go"
 	"trpc.group/trpc-go/trpc-go/codec"
@@ -27,6 +28,9 @@ func init() {
 		panic(err)
 	}
 	if err := utils.SnowflakeInit(getMachineID()); err != nil {
+		panic(err)
+	}
+	if err := mysql.Init(); err != nil {
 		panic(err)
 	}
 }
