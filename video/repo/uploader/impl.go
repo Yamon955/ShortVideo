@@ -47,9 +47,10 @@ func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq)
 
 	// ffmpeg 提取首帧图片
 
+	playUrl := fmt.Sprintf("video/VID_%d/video.mp4", vid)
 	_, err = u.MinIOClient.PutObject(ctx,
 		def.MinIOBucketName,
-		fmt.Sprintf("video/%d/video", vid),
+		playUrl,
 		videoBuffer,
 		int64(videoBuffer.Len()),
 		minio.PutObjectOptions{
@@ -61,9 +62,10 @@ func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq)
 		return 0, err
 	}
 
+	coverUrl := fmt.Sprintf("video/VID_%d/cover.jpeg", vid)
 	_, err = u.MinIOClient.PutObject(ctx,
 		def.MinIOBucketName,
-		fmt.Sprintf("video/%d/cover", vid),
+		coverUrl,
 		imgBuffer,
 		int64(imgBuffer.Len()),
 		minio.PutObjectOptions{
