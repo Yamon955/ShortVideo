@@ -5,6 +5,7 @@ import (
 
 	"github.com/Yamon955/ShortVideo/protocol/video/pb"
 	"github.com/Yamon955/ShortVideo/video/repo/downloader"
+	"github.com/Yamon955/ShortVideo/video/repo/mysql"
 	"github.com/Yamon955/ShortVideo/video/repo/uploader"
 )
 
@@ -18,10 +19,12 @@ func NewHandler() Handler {
 	return &handlerImpl{
 		Downloader: downloader.NewMediaFileDownloader(),
 		Uploader:   uploader.NewMediaFileUploader(),
+		DB:         mysql.NewDBClient(),
 	}
 }
 
 type handlerImpl struct {
 	Downloader downloader.MediaFileDownloader
 	Uploader   uploader.MediaFileUploader
+	DB         mysql.DBClient
 }

@@ -3,11 +3,13 @@ module github.com/Yamon955/ShortVideo/video
 go 1.23.2
 
 require (
-	github.com/Yamon955/ShortVideo/comm v0.0.0-20250124063948-c5f320fb4297
-	github.com/Yamon955/ShortVideo/protocol v0.0.0-20250206123049-d26eff264521
+	github.com/Yamon955/ShortVideo/comm v0.0.0-20250207093249-0ee3e06fc441
+	github.com/Yamon955/ShortVideo/protocol v0.0.0-20250207080429-9b24ed4299be
 	github.com/minio/minio-go/v7 v7.0.84
 	github.com/redis/go-redis/v9 v9.7.0
 	github.com/spf13/viper v1.19.0
+	gorm.io/driver/mysql v1.5.7
+	gorm.io/gorm v1.25.12
 	trpc.group/trpc-go/trpc-go v1.0.3
 )
 
@@ -22,6 +24,7 @@ require (
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-ini/ini v1.67.0 // indirect
 	github.com/go-playground/form/v4 v4.2.0 // indirect
+	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/goccy/go-json v0.10.4 // indirect
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/google/flatbuffers v2.0.0+incompatible // indirect
@@ -29,6 +32,8 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.17.11 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.9 // indirect

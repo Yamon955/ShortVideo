@@ -7,7 +7,9 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 
+	"github.com/Yamon955/ShortVideo/comm/base"
 	"github.com/Yamon955/ShortVideo/comm/utils"
 	"github.com/Yamon955/ShortVideo/video/entity/def"
 	"github.com/Yamon955/ShortVideo/video/entity/errcode"
@@ -22,7 +24,7 @@ type uploaderImpl struct {
 }
 
 // VideoUpload 视频上传
-func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq) (uint64, error) {
+func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq) (*base.Video, error) {
 	var (
 		contentBytes []byte
 		contentType  string
@@ -33,23 +35,24 @@ func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq)
 	contentBytes, err = io.ReadAll(req.File)
 	if err != nil {
 		log.ErrorContextf(ctx, "ioutil.ReadAll failed, err: %v", err)
-		return 0, err
+		return nil, err
 	}
 	// 雪花算法生成 vid
 	vid := utils.GenID()
 	// 判断文件类型
 	contentType = http.DetectContentType(contentBytes)
 	if !strings.HasPrefix(contentType, "video") {
-		return 0, errs.New(errcode.ErrNotVideoType, "非视频文件")
+		return nil, errs.New(errcode.ErrNotVideoType, "非视频文件")
 	}
 	videoBuffer = bytes.NewBuffer(contentBytes)
 	imgBuffer = bytes.NewBuffer(nil)
 
 	// ffmpeg 提取首帧图片
 
+	playUrl := fmt.Sprintf("video/VID_%d/video.mp4", vid)
 	_, err = u.MinIOClient.PutObject(ctx,
 		def.MinIOBucketName,
-		fmt.Sprintf("video/%d/video", vid),
+		playUrl,
 		videoBuffer,
 		int64(videoBuffer.Len()),
 		minio.PutObjectOptions{
@@ -58,12 +61,13 @@ func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq)
 	)
 	if err != nil {
 		log.ErrorContextf(ctx, "minioClient put video object failed, err: %v", err)
-		return 0, err
+		return nil, err
 	}
 
+	coverUrl := fmt.Sprintf("video/VID_%d/cover.jpeg", vid)
 	_, err = u.MinIOClient.PutObject(ctx,
 		def.MinIOBucketName,
-		fmt.Sprintf("video/%d/cover", vid),
+		coverUrl,
 		imgBuffer,
 		int64(imgBuffer.Len()),
 		minio.PutObjectOptions{
@@ -72,7 +76,17 @@ func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq)
 	)
 	if err != nil {
 		log.ErrorContextf(ctx, "minioClient put cover object failed, err: %v", err)
-		return 0, err
+		return nil, err
 	}
-	return vid, nil
+
+	videoInfo := &base.Video{
+		UID:         req.UID,
+		VID:         vid,
+		VideoURL:    playUrl,
+		CoverURL:    coverUrl,
+		Title:       req.Title,
+		PublishTime: time.Now().Unix(),
+	}
+
+	return videoInfo, nil
 }

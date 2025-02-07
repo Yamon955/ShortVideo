@@ -2,6 +2,7 @@ server:
   app: shortvideo
   server: gateway
   filter:
+    - time_consuming
     - router_filter
     - auth_filter
   service:

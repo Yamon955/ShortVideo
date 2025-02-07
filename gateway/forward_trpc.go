@@ -55,7 +55,7 @@ func forwardTRPC(w http.ResponseWriter, r *http.Request, routeConf *entity.Route
 		client.WithCurrentSerializationType(codec.SerializationTypeNoop), // 透传即可，无需进行序列化
 		client.WithCurrentCompressType(codec.CompressTypeNoop),           // 不要自动解压缩
 	}
-	// 后端服务可能用到的 metadata
+	// 后端服务可能用到的 metadata [如 登录态 uid， traceID]
 	opts = append(opts, getOpts(ctx, r)...)
 	rspBody := &codec.Body{}
 	log.InfoContextf(ctx, "URL:%s forward success", r.URL.Path)
@@ -119,7 +119,7 @@ func getOpts(ctx context.Context, r *http.Request) (opts []client.Option) {
 		uid = loginUID.(string)
 	}
 	tranceID := getTraceID(ctx, uid)
-	log.ErrorContextf(ctx, "uid[%s]", uid)
+	//log.ErrorContextf(ctx, "uid[%s]", uid)
 	opts = []client.Option{
 		client.WithMetaData("sv_login_uid", []byte(uid)),
 		client.WithMetaData("sv_trace_id", []byte(tranceID)),

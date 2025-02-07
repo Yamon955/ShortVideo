@@ -8,7 +8,7 @@ CONFIG_FILE=./conf/trpc_go.yaml
 LOG_FILE=start.log
 
 # 默认目标
-all: stop build run
+all: stop build run clean
 
 # 构建目标
 build:
@@ -20,6 +20,7 @@ run:
 	@echo "Running the server..."
 	@nohup ./$(SERVER) --conf=$(CONFIG_FILE) > $(LOG_FILE) 2>&1 &
 	@echo "Checking if the service started successfully..."
+	@sleep 4  # 用 nohup 命令在后台运行服务器, 添加短暂的延迟，确保进程有足够的时间启动
 	@if pgrep -f "$(SERVER)" > /dev/null; then \
 		echo "Service started successfully."; \
 	else \

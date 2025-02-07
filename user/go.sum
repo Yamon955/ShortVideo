@@ -2,8 +2,8 @@ github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/Yamon955/ShortVideo v0.0.0-20250103042040-3300eb9c4755 h1:WvlQprsejM01+3l9iL5r53PNDbqPQNGYnfttGsx9AxE=
 github.com/Yamon955/ShortVideo v0.0.0-20250103042040-3300eb9c4755/go.mod h1:eOqdS+OL7D87RAUGqhrRPsVUwklGy8nmiHa5DBm1Uc8=
-github.com/Yamon955/ShortVideo/comm v0.0.0-20250109031715-ffc59131319e h1:nsdh94BZlNQGM3vMlMprYNTicSIIfQ2CrlksDjWe/I8=
-github.com/Yamon955/ShortVideo/comm v0.0.0-20250109031715-ffc59131319e/go.mod h1:ePwMB2R0vI8J8yRzcy35oebHhFdBtZBiHuwj7gmZA2c=
+github.com/Yamon955/ShortVideo/comm v0.0.0-20250207093249-0ee3e06fc441 h1:VEHB412aQDN/JqK6m6wiNI25klkInvm/Ig1ICdzhxpo=
+github.com/Yamon955/ShortVideo/comm v0.0.0-20250207093249-0ee3e06fc441/go.mod h1:SEB9X3Vbvt2HZHYszwDz7nVYJyZMwb1akPk6cSz7dsY=
 github.com/Yamon955/ShortVideo/protocol v0.0.0-20250108090952-e3b501a7db19 h1:LXCFLQTTgbcCwVnbofqhALZ72w9B7r8UIH7jEDufjhY=
 github.com/Yamon955/ShortVideo/protocol v0.0.0-20250108090952-e3b501a7db19/go.mod h1:wS8fZYx1Xfm2r26UV1l+9pD32Va899bXQ/pyEZGDZRA=
 github.com/andybalholm/brotli v1.0.4 h1:V7DdXeJtZscaqfNuAdSRuRFzuiKlHSC/Zh3zl9qY3JY=
@@ -91,6 +91,8 @@ github.com/sagikazarmark/locafero v0.4.0 h1:HApY1R9zGo4DBgr7dqsTH/JJxLTTsOt7u6ke
 github.com/sagikazarmark/locafero v0.4.0/go.mod h1:Pe1W6UlPYUk/+wc/6KFhbORCfqzgYEpgQ3O5fPuL3H4=
 github.com/sagikazarmark/slog-shim v0.1.0 h1:diDBnUNK9N/354PgrxMywXnAwEr1QZcOr6gto+ugjYE=
 github.com/sagikazarmark/slog-shim v0.1.0/go.mod h1:SrcSrq8aKtyuqEI1uvTDTK1arOWRIczQRv+GVI1AkeQ=
+github.com/sony/sonyflake v1.2.0 h1:Pfr3A+ejSg+0SPqpoAmQgEtNDAhc2G1SUYk205qVMLQ=
+github.com/sony/sonyflake v1.2.0/go.mod h1:LORtCywH/cq10ZbyfhKrHYgAUGH7mOBa76enV9txy/Y=
 github.com/sourcegraph/conc v0.3.0 h1:OQTbbt6P72L20UqAkXXuLOj79LfEanQ+YQFNpLA9ySo=
 github.com/sourcegraph/conc v0.3.0/go.mod h1:Sdozi7LEKbFPqYX2/J+iBAM6HpqSLTASQIKqDmF7Mt0=
 github.com/spf13/afero v1.11.0 h1:WJQKhtpdm3v2IzqG8VMqrr6Rf3UYpEF239Jy9wNepM8=
