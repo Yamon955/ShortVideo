@@ -29,12 +29,6 @@ func (h *handlerImpl) HandlePublish(ctx context.Context, req *pb.PublishReq) (*p
 		log.ErrorContextf(ctx, "parseHTTPForm failed, err:%v", err)
 		return nil, errs.New(errcode.ErrPublishFailed, "上传失败,请稍后重试!")
 	}
-	//// 下载文件
-	//videoFile, err := h.Downloader.PieceDownloadVideoFile(ctx, file, fileHeader)
-	//if err != nil {
-	//	log.ErrorContextf(ctx, "PieceDownloadVideoFile failed, err:%v", err)
-	//	return nil, errs.New(errcode.ErrPublishFailed, "读取失败,请稍后重试!")
-	//}
 	uploadReq := &uploader.MediaFileUploadReq{
 		UID:  uid,
 		File: file,
@@ -46,7 +40,10 @@ func (h *handlerImpl) HandlePublish(ctx context.Context, req *pb.PublishReq) (*p
 		return nil, errs.New(errcode.ErrPublishFailed, "上传失败,请稍后重试!")
 	}
 	log.Infof("uid:%d, VideoUpload success. vid:%v", uid, vid)
-	return &pb.PublishRsp{}, nil
+	return &pb.PublishRsp{
+		StatusMsg: "上传成功",
+		Vid:       vid,
+	}, nil
 }
 
 // parseHTTPForm 解析 http_form-data 请求

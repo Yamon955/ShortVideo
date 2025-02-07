@@ -22,7 +22,7 @@ type uploaderImpl struct {
 }
 
 // VideoUpload 视频上传
-func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq) (int64, error) {
+func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq) (uint64, error) {
 	var (
 		contentBytes []byte
 		contentType  string
@@ -57,7 +57,7 @@ func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq)
 		},
 	)
 	if err != nil {
-		log.ErrorContextf(ctx, "minioClient.PutObject failed, err: %v", err)
+		log.ErrorContextf(ctx, "minioClient put video object failed, err: %v", err)
 		return 0, err
 	}
 
@@ -71,8 +71,8 @@ func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq)
 		},
 	)
 	if err != nil {
-		log.ErrorContextf(ctx, "minioClient.PutObject failed, err: %v", err)
+		log.ErrorContextf(ctx, "minioClient put cover object failed, err: %v", err)
 		return 0, err
 	}
-	return 0, nil
+	return vid, nil
 }

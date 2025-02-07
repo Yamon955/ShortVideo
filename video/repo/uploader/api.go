@@ -17,7 +17,7 @@ type MediaFileUploadReq struct {
 // MediaFileUploader 文件上传器
 type MediaFileUploader interface {
 	// VideoUpload 视频上传
-	VideoUpload(ctx context.Context, req *MediaFileUploadReq) (int64, error)
+	VideoUpload(ctx context.Context, req *MediaFileUploadReq) (uint64, error)
 }
 
 // NewMediaFileUploader 创建上传器对象

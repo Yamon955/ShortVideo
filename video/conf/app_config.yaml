@@ -14,8 +14,7 @@ redis:
   db: 0
 
 minio:
-  endpoint: "127.0.0.1"
-  port: 9000
+  endpoint: "127.0.0.1:9000"
   access_key_id: "minioadmin"
   secret_access_key: "minioadmin"
 
