@@ -4,7 +4,7 @@ go 1.23.2
 
 require (
 	github.com/Yamon955/ShortVideo v0.0.0-20250103042040-3300eb9c4755
-	github.com/Yamon955/ShortVideo/comm v0.0.0-20250109031715-ffc59131319e
+	github.com/Yamon955/ShortVideo/comm v0.0.0-20250207093249-0ee3e06fc441
 	github.com/Yamon955/ShortVideo/protocol v0.0.0-20250108090952-e3b501a7db19
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/stretchr/testify v1.10.0
@@ -25,6 +25,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
+	github.com/sony/sonyflake v1.2.0 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect

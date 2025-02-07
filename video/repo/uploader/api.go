@@ -13,7 +13,6 @@ type MediaFileUploadReq struct {
 	UID   uint64
 	File  multipart.File
 	Title string
-	Tags  []string
 }
 
 // MediaFileUploader 文件上传器

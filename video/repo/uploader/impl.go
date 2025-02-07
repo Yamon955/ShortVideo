@@ -85,7 +85,6 @@ func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq)
 		VideoURL:    playUrl,
 		CoverURL:    coverUrl,
 		Title:       req.Title,
-		Tags:        req.Tags,
 		PublishTime: time.Now().Unix(),
 	}
 

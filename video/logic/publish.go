@@ -34,7 +34,6 @@ func (h *handlerImpl) HandlePublish(ctx context.Context, req *pb.PublishReq) (*p
 		UID:   uid,
 		File:  file,
 		Title: title,
-		Tags:  tags,
 	}
 	videoInfo, err := h.Uploader.VideoUpload(ctx, uploadReq)
 	if err != nil {
@@ -43,6 +42,14 @@ func (h *handlerImpl) HandlePublish(ctx context.Context, req *pb.PublishReq) (*p
 	}
 	log.Infof("uid:%d, VideoUpload success. vid:%v", uid, videoInfo.VID)
 
+	// 计算视频标签值
+	var tag uint64
+	for _, tagValStr := range tags {
+		tagVal, _ := strconv.ParseInt(tagValStr, 10, 8)
+		tag |= 1 << tagVal
+	}
+	videoInfo.Tags = tag
+	// 视频信息存储到视频表中
 	err = h.DB.InsertVideo(ctx, videoInfo)
 	if err != nil {
 		log.ErrorContextf(ctx, "Insert video failed, err:%v", err)
@@ -80,9 +87,4 @@ func parseHTTPForm(ctx context.Context) ([]string, string, multipart.File, *mult
 		return nil, "", nil, nil, err
 	}
 	return tags, title, file, fileHeader, nil
-}
-
-// transCode 视频转码 是不是应该在kafka消费者实现，从而保证转码可以重试直到成功
-func transCode(data []byte) {
-
 }
