@@ -13,8 +13,8 @@ var (
 	startTime = time.Date(2023, 1, 1, 0, 0, 0, 0, time.UTC)
 )
 
-// Init 使用当前机器 ID 初始化雪花算法生成器
-func Init(machineID uint16) error {
+// SnowflakeInit 使用当前机器 ID 初始化雪花算法生成器
+func SnowflakeInit(machineID uint16) error {
 	// 配置 Sonyflake
 	settings := sonyflake.Settings{
 		MachineID: func() (uint16, error) {

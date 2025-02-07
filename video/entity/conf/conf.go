@@ -11,6 +11,7 @@ type AppConfig struct {
 	UserDefaultConf UserDefaultConfig `mapstructure:"user_default_conf"`
 	MySQLConf       MySQLConfig       `mapstructure:"mysql"`
 	RedisConf       RedisConf         `mapstructure:"redis"`
+	MinIOConf       MinIOConf         `mapstructure:"minio"`
 }
 
 type UserDefaultConfig struct {
@@ -33,6 +34,13 @@ type RedisConf struct {
 	Port     string `mapstructure:"port"`
 	Password string `mapstructure:"password"`
 	DB       int    `mapstructure:"db"`
+}
+
+type MinIOConf struct {
+	Endpoint        string `mapstructure:"endpoint"`
+	Port            string `mapstructure:"port"`
+	AccessKeyID     string `mapstructure:"access_key_id"`
+	SecretAccessKey string `mapstructure:"secret_access_key"`
 }
 
 var AppConf *AppConfig

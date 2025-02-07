@@ -23,21 +23,15 @@ const (
 
 func (h *handlerImpl) HandlePublish(ctx context.Context, req *pb.PublishReq) (*pb.PublishRsp, error) {
 	uid, _ := strconv.ParseUint(string(trpc.GetMetaData(ctx, "sv_login_uid")), 10, 64)
-	tags, file, fileHeader, err := parseHTTPForm(ctx)
+	tags, file, _, err := parseHTTPForm(ctx)
+	defer file.Close()
 	if err != nil {
 		log.ErrorContextf(ctx, "parseHTTPForm failed, err:%v", err)
 		return nil, errs.New(errcode.ErrPublishFailed, "上传失败,请稍后重试!")
 	}
-	// 下载文件
-	videoFile, err := h.Downloader.PieceDownloadVideoFile(ctx, file, fileHeader)
-	if err != nil {
-		log.ErrorContextf(ctx, "PieceDownloadVideoFile failed, err:%v", err)
-		return nil, errs.New(errcode.ErrPublishFailed, "读取失败,请稍后重试!")
-	}
 	uploadReq := &uploader.MediaFileUploadReq{
 		UID:  uid,
-		Data: videoFile.Data,
-		Size: videoFile.Size,
+		File: file,
 		Tags: tags,
 	}
 	vid, err := h.Uploader.VideoUpload(ctx, uploadReq)
@@ -46,7 +40,10 @@ func (h *handlerImpl) HandlePublish(ctx context.Context, req *pb.PublishReq) (*p
 		return nil, errs.New(errcode.ErrPublishFailed, "上传失败,请稍后重试!")
 	}
 	log.Infof("uid:%d, VideoUpload success. vid:%v", uid, vid)
-	return &pb.PublishRsp{}, nil
+	return &pb.PublishRsp{
+		StatusMsg: "上传成功",
+		Vid:       vid,
+	}, nil
 }
 
 // parseHTTPForm 解析 http_form-data 请求

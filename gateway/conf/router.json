@@ -29,6 +29,8 @@
         "protocol": "http",
         "is_allow_no_auth": true
     },
+
+
     {
         "path": "/shortvideo/user/register",
         "is_regex": "0",
@@ -66,5 +68,17 @@
         "target": "ip://127.0.0.1:20001",
         "timeout": "2s",
         "protocol": "trpc"
+    },
+
+
+
+    {
+        "path": "/shortvideo/video/publish",
+        "is_regex": "0",
+        "service": "trpc.shortvideo.video.Publish",
+        "method": "/trpc.shortvideo.video.Publish/Publish",
+        "target": "ip://127.0.0.1:30002",
+        "timeout": "200s",
+        "protocol": "http"
     }
 ]

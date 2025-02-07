@@ -1,6 +1,6 @@
 server:
   app: shortvideo
-  server: test
+  server: video
   service:
     # 基本视频服务，获取feeds推荐列表，获取发布列表
     - name: trpc.shortvideo.video.Video
@@ -12,7 +12,7 @@ server:
     - name: trpc.shortvideo.video.Publish
       network: tcp
       protocol: http # 泛 HTTP 标准服务
-      timeout: 20000
+      timeout: 2000000
       port: 30002
 
 plugins:
