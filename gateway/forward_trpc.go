@@ -119,7 +119,7 @@ func getOpts(ctx context.Context, r *http.Request) (opts []client.Option) {
 		uid = loginUID.(string)
 	}
 	tranceID := getTraceID(ctx, uid)
-	log.ErrorContextf(ctx, "uid[%s]", uid)
+	//log.ErrorContextf(ctx, "uid[%s]", uid)
 	opts = []client.Option{
 		client.WithMetaData("sv_login_uid", []byte(uid)),
 		client.WithMetaData("sv_trace_id", []byte(tranceID)),
