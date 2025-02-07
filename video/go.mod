@@ -3,7 +3,7 @@ module github.com/Yamon955/ShortVideo/video
 go 1.23.2
 
 require (
-	github.com/Yamon955/ShortVideo/comm v0.0.0-20250207075422-de0b9ed8464e
+	github.com/Yamon955/ShortVideo/comm v0.0.0-20250207080429-9b24ed4299be
 	github.com/Yamon955/ShortVideo/protocol v0.0.0-20250206123049-d26eff264521
 	github.com/minio/minio-go/v7 v7.0.84
 	github.com/redis/go-redis/v9 v9.7.0

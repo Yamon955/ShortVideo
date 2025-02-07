@@ -2,6 +2,8 @@ github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/Yamon955/ShortVideo/comm v0.0.0-20250207075422-de0b9ed8464e h1:fA4lsgICJVHa/TU9fO1/ZPIsC801ynjeWP51vKFm/9k=
 github.com/Yamon955/ShortVideo/comm v0.0.0-20250207075422-de0b9ed8464e/go.mod h1:SEB9X3Vbvt2HZHYszwDz7nVYJyZMwb1akPk6cSz7dsY=
+github.com/Yamon955/ShortVideo/comm v0.0.0-20250207080429-9b24ed4299be h1:Qwh6usawaDlVOQwXp690ZLq1b/yAdTorl9eC+g+nCCY=
+github.com/Yamon955/ShortVideo/comm v0.0.0-20250207080429-9b24ed4299be/go.mod h1:SEB9X3Vbvt2HZHYszwDz7nVYJyZMwb1akPk6cSz7dsY=
 github.com/Yamon955/ShortVideo/protocol v0.0.0-20250206123049-d26eff264521 h1:q3c1e4OQ3JGLiVkuvzlhfF3LqOvZw/vkRWU9qVfjAK0=
 github.com/Yamon955/ShortVideo/protocol v0.0.0-20250206123049-d26eff264521/go.mod h1:wS8fZYx1Xfm2r26UV1l+9pD32Va899bXQ/pyEZGDZRA=
 github.com/Yamon955/ShortVideo/user v0.0.0-20250108121911-d39a21407197 h1:7pSfUfX6kl6UhLom6bgzzZXxosMq2k4PWdnDww9iLwk=

@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/Yamon955/ShortVideo/comm/base"
 	"github.com/Yamon955/ShortVideo/comm/utils"
@@ -23,7 +24,7 @@ type uploaderImpl struct {
 }
 
 // VideoUpload 视频上传
-func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq) (uint64, error) {
+func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq) (*base.Video, error) {
 	var (
 		contentBytes []byte
 		contentType  string
@@ -79,12 +80,14 @@ func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq)
 	}
 
 	videoInfo := &base.Video{
-		UID:      req.UID,
-		VID:      vid,
-		VideoURL: playUrl,
-		CoverURL: coverUrl,
-		Title:    req.Title,
+		UID:         req.UID,
+		VID:         vid,
+		VideoURL:    playUrl,
+		CoverURL:    coverUrl,
+		Title:       req.Title,
+		Tags:        req.Tags,
+		PublishTime: time.Now().Unix(),
 	}
 
-	return vid, nil
+	return videoInfo, nil
 }
