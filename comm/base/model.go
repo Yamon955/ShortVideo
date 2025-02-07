@@ -16,7 +16,7 @@ type User struct {
 
 // Video 视频信息
 type Video struct {
-	VID           uint64   `gorm:"column:vid;unique;index"  json:"vid"`         // 主键，视频ID
+	VID           uint64   `gorm:"column:vid;primaryKey;index"  json:"vid"`     // 主键，视频ID
 	UID           uint64   `gorm:"column:uid;index" json:"uid"`                 // 外键，视频发布者ID
 	VideoURL      string   `gorm:"column:video_url" json:"video_url"`           // 视频播放URL
 	CoverURL      string   `gorm:"column:cover_url" json:"cover_url"`           // 视频封面URL
