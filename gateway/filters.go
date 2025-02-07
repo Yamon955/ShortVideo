@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"strconv"
+	"time"
 
 	"github.com/Yamon955/ShortVideo/gateway/entity"
 	"github.com/Yamon955/ShortVideo/gateway/repo/auth"
@@ -12,6 +13,21 @@ import (
 	thttp "trpc.group/trpc-go/trpc-go/http"
 	"trpc.group/trpc-go/trpc-go/log"
 )
+
+// timeConsumingFilter 耗时统计拦截器
+func timeConsumingFilter() filter.ServerFilter {
+	return func(ctx context.Context, req interface{}, next filter.ServerHandleFunc) (rsp interface{}, err error) {
+		begin := time.Now()
+
+		rsp, err = next(ctx, req) // 必须手动调用下一个拦截器
+
+		cost := time.Since(begin).Milliseconds()
+		header := thttp.Head(ctx)
+		reqPath := header.Request.URL.Path
+		log.Infof("req:[%s] take times: %dms", reqPath, cost)
+		return
+	}
+}
 
 // routerFilter 路由 filter 需要放在依赖 entity.Router 的 filter 前面
 func routerFilter() filter.ServerFilter {
@@ -41,6 +57,7 @@ func authFilter() filter.ServerFilter {
 			return next(ctx, req)
 		}
 		log.InfoContextf(ctx, "check auth, req.path:%s", routeConf.Path)
+		// http 头部 Authorization 字段携带登录态 token
 		token := thttp.Head(ctx).Request.Header.Get("Authorization")
 		verifySuc, loginUID, err := auth.VerifyJWT(ctx, token)
 		if err != nil || !verifySuc {

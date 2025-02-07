@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/Yamon955/ShortVideo/gateway/entity"
@@ -21,8 +22,8 @@ func forwardHTTP(w http.ResponseWriter, r *http.Request, routerConf *entity.Rout
 	if err != nil {
 		timeout = 2 * time.Second
 	}
-	ctx := r.Context()
-	ctx, msg := codec.WithCloneMessage(ctx)
+	//ctx := r.Context()
+	ctx, msg := codec.WithCloneMessage(r.Context())
 	defer codec.PutBackMessage(msg)
 	reqHead, reqBody, err := transHTTPReq(r)
 	if err != nil {
@@ -46,13 +47,17 @@ func forwardHTTP(w http.ResponseWriter, r *http.Request, routerConf *entity.Rout
 		client.WithCurrentSerializationType(codec.SerializationTypeNoop), // 只透传不序列化
 		client.WithCurrentCompressType(codec.CompressTypeNoop),
 	}
+	// 后端服务可能用到的 metadata [如 登录态 uid， traceID]
+	opts = append(opts, getOpts(ctx, r)...)
 	if err = client.DefaultClient.Invoke(ctx, reqBody, rspBody, opts...); err != nil {
-		// err != nil 时，rsp.Body 会被清空
+		// err != nil 时，使用 err 信息填充 http.Rsp.Body
 		rsp := &errRsp{
 			Code: int(errs.Code(err)),
 			Msg:  errs.Msg(err),
 		}
 		rspBody.Data, _ = json.Marshal(rsp)
+		// 更新 http 头部内容长度信息
+		rsphead.Response.Header.Set("Content-Length", strconv.Itoa(len(rspBody.Data)))
 	}
 	if err = transHTTPRsp(w, rsphead, rspBody); err != nil {
 		log.Errorf("transHTTPRsp failed, err:%v", err)

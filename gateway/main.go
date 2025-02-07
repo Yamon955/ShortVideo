@@ -13,6 +13,8 @@ import (
 )
 
 func init() {
+	// 服务端耗时统计拦截器
+	filter.Register("time_consuming", timeConsumingFilter(), nil)
 	// 服务端路由拦截器
 	filter.Register("router_filter", routerFilter(), nil)
 	// 服务端鉴权拦截器
@@ -21,9 +23,11 @@ func init() {
 
 func main() {
 	s := trpc.NewServer()
+
 	if err := router.Init(); err != nil {
 		log.Fatal(err)
 	}
+
 	thttp.HandleFunc("*", handle)
 	thttp.RegisterNoProtocolService(s)
 	if err := s.Serve(); err != nil {
