@@ -11,6 +11,7 @@ import (
 
 	"github.com/Yamon955/ShortVideo/comm/base"
 	"github.com/Yamon955/ShortVideo/comm/utils"
+	"github.com/Yamon955/ShortVideo/video/entity/conf"
 	"github.com/Yamon955/ShortVideo/video/entity/def"
 	"github.com/Yamon955/ShortVideo/video/entity/errcode"
 	"github.com/minio/minio-go/v7"
@@ -47,7 +48,7 @@ func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq)
 	videoBuffer = bytes.NewBuffer(contentBytes)
 	imgBuffer = bytes.NewBuffer(nil)
 
-	// ffmpeg 提取首帧图片
+	// todo:ffmpeg 提取首帧图片
 
 	playUrl := fmt.Sprintf("video/VID_%d/video.mp4", vid)
 	_, err = u.MinIOClient.PutObject(ctx,
@@ -79,11 +80,13 @@ func (u *uploaderImpl) VideoUpload(ctx context.Context, req *MediaFileUploadReq)
 		return nil, err
 	}
 
+	// minio url前缀
+	urlPrefix := conf.GetAppConfig().CommConfig.UrlPrefix
 	videoInfo := &base.Video{
 		UID:         req.UID,
 		VID:         vid,
-		VideoURL:    playUrl,
-		CoverURL:    coverUrl,
+		VideoURL:    fmt.Sprintf("%s/%s", urlPrefix, playUrl),
+		CoverURL:    fmt.Sprintf("%s/%s", urlPrefix, coverUrl),
 		Title:       req.Title,
 		PublishTime: time.Now().Unix(),
 	}
