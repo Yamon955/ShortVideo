@@ -4,6 +4,18 @@ package trpc.shortvideo.video;
 
 option go_package = "github.com/Yamon955/ShortVideo/protocol/video/pb";
 
+message VideoInfo {
+    uint64 vid = 1;
+    string video_url = 2;
+    string cover_url = 3;
+    string title = 4;
+    uint64 tags = 5;
+    int32  likes_count = 6;
+    int32  collect_count = 7;
+    int32  comments_count = 8;
+    int64  publish_time = 9;
+}
+
 service Video {
     rpc GetFeeds(GetFeedsReq) returns (GetFeedsRsp);
     rpc GetPublishList(GetPublishListReq) returns (GetPublishListRsp);
@@ -51,23 +63,24 @@ message PublishRsp {
 }
 
 message GetPublishListReq {
-    int64 start_id = 1;
+    uint64 start_id = 1;
 }
 message GetPublishListRsp {
-    int64 next_id = 1;
+    uint64 next_id = 1;
 }
 
 message GetLikeListReq {
-    int64 start_id = 1;
+    uint64 start_id = 1;
 }
 message GetLikeListRsp {
-    int64 next_id = 1;
+    uint64 next_id = 1;
 }
 
 message GetCollectListReq {
-    int64 start_id = 1;
+    uint64 start_id = 1;
 }
 message GetCollectListRsp {
-    int64 next_id = 1;
+    uint64 next_id = 1;
+    repeated VideoInfo video_infos = 2;
 }
 
