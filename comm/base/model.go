@@ -16,16 +16,17 @@ type User struct {
 
 // Video 视频信息
 type Video struct {
-	VID           uint64 `gorm:"column:vid;primaryKey;index"  json:"vid"`     // 主键，视频ID
-	UID           uint64 `gorm:"column:uid;index" json:"uid"`                 // 外键，视频发布者ID
-	VideoURL      string `gorm:"column:video_url" json:"video_url"`           // 视频播放URL
-	CoverURL      string `gorm:"column:cover_url" json:"cover_url"`           // 视频封面URL
-	Title         string `gorm:"column:title" json:"title"`                   // 视频标题
-	Tags          uint64 `gorm:"column:tags" json:"tags"`                     // 视频标签
-	LikesCount    int32  `gorm:"column:likes_count" json:"likes_count"`       // 视频点赞数
-	CollectsCount int32  `gorm:"column:collects_count" json:"collects_count"` // 视频收藏数
-	CommentsCount int32  `gorm:"column:comments_count" json:"comments_count"` // 视频评论数
-	PublishTime   int64  `gorm:"column:publish_time" json:"publish_time"`     // 发布时间
+	ID            uint64 `gorm:"column:id;primaryKey;autoIncrement;index" json:"id"` // 自增主键
+	VID           uint64 `gorm:"column:vid;unique;index"  json:"vid"`                // 视频ID
+	UID           uint64 `gorm:"column:uid;index" json:"uid"`                        // 外键，视频发布者ID
+	VideoURL      string `gorm:"column:video_url" json:"video_url"`                  // 视频播放URL
+	CoverURL      string `gorm:"column:cover_url" json:"cover_url"`                  // 视频封面URL
+	Title         string `gorm:"column:title" json:"title"`                          // 视频标题
+	Tags          uint64 `gorm:"column:tags" json:"tags"`                            // 视频标签
+	LikesCount    int32  `gorm:"column:likes_count" json:"likes_count"`              // 视频点赞数
+	CollectsCount int32  `gorm:"column:collects_count" json:"collects_count"`        // 视频收藏数
+	CommentsCount int32  `gorm:"column:comments_count" json:"comments_count"`        // 视频评论数
+	PublishTime   int64  `gorm:"column:publish_time" json:"publish_time"`            // 发布时间
 }
 
 // Like 点赞信息
