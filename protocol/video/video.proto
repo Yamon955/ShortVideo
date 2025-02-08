@@ -14,6 +14,8 @@ message VideoInfo {
     int32  collect_count = 7;
     int32  comments_count = 8;
     int64  publish_time = 9;
+    bool liked = 10;
+    bool collected = 11;
 }
 
 service Video {
@@ -67,6 +69,7 @@ message GetPublishListReq {
 }
 message GetPublishListRsp {
     uint64 next_id = 1;
+    repeated VideoInfo video_infos = 2;
 }
 
 message GetLikeListReq {
@@ -74,6 +77,7 @@ message GetLikeListReq {
 }
 message GetLikeListRsp {
     uint64 next_id = 1;
+    repeated VideoInfo video_infos = 2;
 }
 
 message GetCollectListReq {
