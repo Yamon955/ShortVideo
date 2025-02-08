@@ -22,6 +22,10 @@ type VideoService interface {
 	GetFeeds(ctx context.Context, req *GetFeedsReq) (*GetFeedsRsp, error)
 
 	GetPublishList(ctx context.Context, req *GetPublishListReq) (*GetPublishListRsp, error)
+
+	GetLikeList(ctx context.Context, req *GetLikeListReq) (*GetLikeListRsp, error)
+
+	GetCollectList(ctx context.Context, req *GetCollectListReq) (*GetCollectListRsp, error)
 }
 
 func VideoService_GetFeeds_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
@@ -60,6 +64,42 @@ func VideoService_GetPublishList_Handler(svr interface{}, ctx context.Context, f
 	return rsp, nil
 }
 
+func VideoService_GetLikeList_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &GetLikeListReq{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(VideoService).GetLikeList(ctx, reqbody.(*GetLikeListReq))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func VideoService_GetCollectList_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &GetCollectListReq{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(VideoService).GetCollectList(ctx, reqbody.(*GetCollectListReq))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
 // VideoServer_ServiceDesc descriptor for server.RegisterService.
 var VideoServer_ServiceDesc = server.ServiceDesc{
 	ServiceName: "trpc.shortvideo.video.Video",
@@ -72,6 +112,14 @@ var VideoServer_ServiceDesc = server.ServiceDesc{
 		{
 			Name: "/trpc.shortvideo.video.Video/GetPublishList",
 			Func: VideoService_GetPublishList_Handler,
+		},
+		{
+			Name: "/trpc.shortvideo.video.Video/GetLikeList",
+			Func: VideoService_GetLikeList_Handler,
+		},
+		{
+			Name: "/trpc.shortvideo.video.Video/GetCollectList",
+			Func: VideoService_GetCollectList_Handler,
 		},
 	},
 }
@@ -135,6 +183,12 @@ func (s *UnimplementedVideo) GetFeeds(ctx context.Context, req *GetFeedsReq) (*G
 func (s *UnimplementedVideo) GetPublishList(ctx context.Context, req *GetPublishListReq) (*GetPublishListRsp, error) {
 	return nil, errors.New("rpc GetPublishList of service Video is not implemented")
 }
+func (s *UnimplementedVideo) GetLikeList(ctx context.Context, req *GetLikeListReq) (*GetLikeListRsp, error) {
+	return nil, errors.New("rpc GetLikeList of service Video is not implemented")
+}
+func (s *UnimplementedVideo) GetCollectList(ctx context.Context, req *GetCollectListReq) (*GetCollectListRsp, error) {
+	return nil, errors.New("rpc GetCollectList of service Video is not implemented")
+}
 
 type UnimplementedPublish struct{}
 
@@ -153,6 +207,10 @@ type VideoClientProxy interface {
 	GetFeeds(ctx context.Context, req *GetFeedsReq, opts ...client.Option) (rsp *GetFeedsRsp, err error)
 
 	GetPublishList(ctx context.Context, req *GetPublishListReq, opts ...client.Option) (rsp *GetPublishListRsp, err error)
+
+	GetLikeList(ctx context.Context, req *GetLikeListReq, opts ...client.Option) (rsp *GetLikeListRsp, err error)
+
+	GetCollectList(ctx context.Context, req *GetCollectListReq, opts ...client.Option) (rsp *GetCollectListRsp, err error)
 }
 
 type VideoClientProxyImpl struct {
@@ -198,6 +256,46 @@ func (c *VideoClientProxyImpl) GetPublishList(ctx context.Context, req *GetPubli
 	callopts = append(callopts, c.opts...)
 	callopts = append(callopts, opts...)
 	rsp := &GetPublishListRsp{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *VideoClientProxyImpl) GetLikeList(ctx context.Context, req *GetLikeListReq, opts ...client.Option) (*GetLikeListRsp, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/trpc.shortvideo.video.Video/GetLikeList")
+	msg.WithCalleeServiceName(VideoServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("shortvideo")
+	msg.WithCalleeServer("video")
+	msg.WithCalleeService("Video")
+	msg.WithCalleeMethod("GetLikeList")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &GetLikeListRsp{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *VideoClientProxyImpl) GetCollectList(ctx context.Context, req *GetCollectListReq, opts ...client.Option) (*GetCollectListRsp, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/trpc.shortvideo.video.Video/GetCollectList")
+	msg.WithCalleeServiceName(VideoServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("shortvideo")
+	msg.WithCalleeServer("video")
+	msg.WithCalleeService("Video")
+	msg.WithCalleeMethod("GetCollectList")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &GetCollectListRsp{}
 	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
 		return nil, err
 	}

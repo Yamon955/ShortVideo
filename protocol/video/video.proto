@@ -7,6 +7,9 @@ option go_package = "github.com/Yamon955/ShortVideo/protocol/video/pb";
 service Video {
     rpc GetFeeds(GetFeedsReq) returns (GetFeedsRsp);
     rpc GetPublishList(GetPublishListReq) returns (GetPublishListRsp);
+    rpc GetLikeList(GetLikeListReq) returns (GetLikeListRsp);
+    rpc GetCollectList(GetCollectListReq) returns (GetCollectListRsp);
+
 }
 
 service Publish {
@@ -48,8 +51,23 @@ message PublishRsp {
 }
 
 message GetPublishListReq {
-
+    int64 start_id = 1;
 }
 message GetPublishListRsp {
-    
+    int64 next_id = 1;
 }
+
+message GetLikeListReq {
+    int64 start_id = 1;
+}
+message GetLikeListRsp {
+    int64 next_id = 1;
+}
+
+message GetCollectListReq {
+    int64 start_id = 1;
+}
+message GetCollectListRsp {
+    int64 next_id = 1;
+}
+
