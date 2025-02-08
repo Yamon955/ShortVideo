@@ -65,26 +65,29 @@ message PublishRsp {
 }
 
 message GetPublishListReq {
-    int64 start_id = 1;
+    uint64 start_id = 1;
 }
 message GetPublishListRsp {
-    int64 next_id = 1;
-    repeated VideoInfo video_infos = 2;
+    uint64 next_id = 1;
+    bool is_finash = 2;
+    repeated VideoInfo video_infos = 3;
 }
 
 message GetLikeListReq {
-    int64 start_id = 1;
+    uint64 start_id = 1;
 }
 message GetLikeListRsp {
-    int64 next_id = 1;
-    repeated VideoInfo video_infos = 2;
+    uint64 next_id = 1;
+    bool is_finash = 2;
+    repeated VideoInfo video_infos = 3;
 }
 
 message GetCollectListReq {
-    int64 start_id = 1;
+    uint64 start_id = 1;
 }
 message GetCollectListRsp {
-    int64 next_id = 1;
-    repeated VideoInfo video_infos = 2;
+    uint64 next_id = 1;
+    bool is_finash = 2;
+    repeated VideoInfo video_infos = 3;
 }
 
