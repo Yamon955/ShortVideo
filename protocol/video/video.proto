@@ -65,26 +65,26 @@ message PublishRsp {
 }
 
 message GetPublishListReq {
-    uint64 start_id = 1;
+    int64 start_id = 1;
 }
 message GetPublishListRsp {
-    uint64 next_id = 1;
+    int64 next_id = 1;
     repeated VideoInfo video_infos = 2;
 }
 
 message GetLikeListReq {
-    uint64 start_id = 1;
+    int64 start_id = 1;
 }
 message GetLikeListRsp {
-    uint64 next_id = 1;
+    int64 next_id = 1;
     repeated VideoInfo video_infos = 2;
 }
 
 message GetCollectListReq {
-    uint64 start_id = 1;
+    int64 start_id = 1;
 }
 message GetCollectListRsp {
-    uint64 next_id = 1;
+    int64 next_id = 1;
     repeated VideoInfo video_infos = 2;
 }
 
