@@ -3,7 +3,7 @@ module github.com/Yamon955/ShortVideo/gateway
 go 1.23.2
 
 require (
-	github.com/Yamon955/ShortVideo/comm v0.0.0-20250109031715-ffc59131319e
+	github.com/Yamon955/ShortVideo/comm v0.0.0-20250207135210-390ea89b1659
 	github.com/google/uuid v1.6.0
 	trpc.group/trpc-go/trpc-go v1.0.3
 )
@@ -18,6 +18,7 @@ require (
 	github.com/klauspost/compress v1.17.2 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/panjf2000/ants/v2 v2.4.7 // indirect
+	github.com/sony/sonyflake v1.2.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.45.0 // indirect

@@ -80,5 +80,14 @@
         "target": "ip://127.0.0.1:30002",
         "timeout": "200s",
         "protocol": "http"
+    },
+    {
+        "path": "/shortvideo/video/publish-list",
+        "is_regex": "0",
+        "service": "trpc.shortvideo.video.Video",
+        "method": "/trpc.shortvideo.video.Video/GetPublishList",
+        "target": "ip://127.0.0.1:30001",
+        "timeout": "2s",
+        "protocol": "trpc"
     }
 ]
