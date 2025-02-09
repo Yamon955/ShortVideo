@@ -22,6 +22,7 @@ const (
 	reqFileName  = "data"
 )
 
+// HandlePublish 视频发布
 func (h *handlerImpl) HandlePublish(ctx context.Context, req *pb.PublishReq) (*pb.PublishRsp, error) {
 	uid, _ := strconv.ParseUint(string(trpc.GetMetaData(ctx, "sv_login_uid")), 10, 64)
 	tags, title, file, _, err := parseHTTPForm(ctx)
