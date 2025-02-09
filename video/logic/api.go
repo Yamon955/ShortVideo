@@ -8,9 +8,12 @@ import (
 	"github.com/Yamon955/ShortVideo/video/repo/uploader"
 )
 
+// Handler 视频服务处理器
 type Handler interface {
-	HandleGetFeeds(ctx context.Context, req *pb.GetFeedsReq) (*pb.GetFeedsRsp, error)
+	// HandlePublish 视频发布
 	HandlePublish(ctx context.Context, req *pb.PublishReq) (*pb.PublishRsp, error)
+	// HandleGetFeeds 获取推荐视频列表
+	HandleGetFeeds(ctx context.Context, req *pb.GetFeedsReq) (*pb.GetFeedsRsp, error)
 	// HandleGetPublishList 分页获取用户发布列表
 	HandleGetPublishList(ctx context.Context, req *pb.GetPublishListReq) (*pb.GetPublishListRsp, error)
 }

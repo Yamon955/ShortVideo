@@ -12,7 +12,10 @@ import (
 )
 
 // HandleGetPublishList 分页获取用户发布列表
-func (h *handlerImpl) HandleGetPublishList(ctx context.Context, req *pb.GetPublishListReq) (*pb.GetPublishListRsp, error) {
+func (h *handlerImpl) HandleGetPublishList(
+	ctx context.Context,
+	req *pb.GetPublishListReq,
+) (*pb.GetPublishListRsp, error) {
 	if req.GetStartId() < 0 {
 		return nil, errs.New(errcode.ErrInvalidStartID, "invalid start_id")
 	}
