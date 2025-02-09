@@ -11,6 +11,7 @@ import (
 type Handler interface {
 	HandleGetFeeds(ctx context.Context, req *pb.GetFeedsReq) (*pb.GetFeedsRsp, error)
 	HandlePublish(ctx context.Context, req *pb.PublishReq) (*pb.PublishRsp, error)
+	// HandleGetPublishList 分页获取用户发布列表
 	HandleGetPublishList(ctx context.Context, req *pb.GetPublishListReq) (*pb.GetPublishListRsp, error)
 }
 

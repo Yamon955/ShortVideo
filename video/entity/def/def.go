@@ -6,4 +6,6 @@ const (
 	MinIOBucketName = "svtest"
 
 	MachineID = "machine-id"
+
+	SQLLimitSize = 2
 )
