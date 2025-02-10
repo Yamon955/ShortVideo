@@ -1,6 +1,6 @@
 build:
 	trpc create \
-		-p user.proto \
+		-p recommend.proto \
 		-o ./pb \
 		--protocol trpc \
 		--rpconly \
