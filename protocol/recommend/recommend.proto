@@ -1,0 +1,16 @@
+syntax = "proto3";
+package trpc.shortvideo.recommend;
+
+option go_package = "github.com/Yamon955/ShortVideo/protocol/recommend/pb";
+
+service Recommend {
+    rpc FeedsRecommend(FeedsRecommendReq) returns (FeedsRecommendRsp);
+}
+
+message FeedsRecommendReq {
+    uint64 uid = 1;
+}
+
+message FeedsRecommendRsp {
+    repeated uint64 vids = 1;
+}
