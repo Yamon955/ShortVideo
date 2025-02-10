@@ -9,8 +9,10 @@ service Recommend {
 
 message FeedsRecommendReq {
     uint64 uid = 1;
+    int64 start_index = 2;
 }
 
 message FeedsRecommendRsp {
-    repeated uint64 vids = 1;
+    int64 next_index = 1;
+    repeated uint64 vids = 2;
 }
