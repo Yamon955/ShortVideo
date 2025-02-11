@@ -49,9 +49,12 @@ enum VIDEO_TAGS {
 }
 
 message GetFeedsReq {
+    int64 start_index = 1;
     
 }
 message GetFeedsRsp {
+    int64 next_index = 1;
+    repeated VideoInfo video_infos = 2;
 }
 
 message PublishReq {
