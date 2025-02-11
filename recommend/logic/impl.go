@@ -13,7 +13,14 @@ type handlerImpl struct {
 	rdb *redis.Client
 }
 
-func (h *handlerImpl) HandleFeedsRecommend(ctx context.Context, req *pb.FeedsRecommendReq) (*pb.FeedsRecommendRsp, error) {
+// HandleFeedsRecommend 获取推荐 feeds
+func (h *handlerImpl) HandleFeedsRecommend(
+	ctx context.Context,
+	req *pb.FeedsRecommendReq,
+) (*pb.FeedsRecommendRsp, error) {
+	if req.StartIndex < 0 {
+		req.StartIndex = 0
+	}
 	recommendedVids := make([]uint64, 0, 2*def.RecommendFeesCount)
 	startIndex := req.GetStartIndex()
 	for len(recommendedVids) < def.RecommendFeesCount {
