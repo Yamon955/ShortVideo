@@ -10,3 +10,9 @@ mysql:
   db_name: "sv"
   max_open_conns: 1000
   max_idle_conns: 50
+
+redis:
+  address: "0.0.0.0:6379"
+  port: 6379
+  password: ""
+  db: 0
