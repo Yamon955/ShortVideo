@@ -18,6 +18,7 @@ func (s *recommendSvrImpl) FeedsRecommend(
 	ctx context.Context,
 	req *pb.FeedsRecommendReq,
 ) (*pb.FeedsRecommendRsp, error) {
+	log.ErrorContextf(ctx, "Recommend")
 	rsp, err := s.handler.HandleFeedsRecommend(ctx, req)
 	if err != nil {
 		log.ErrorContextf(ctx, "HandleFeedsRecommend failed, err:%v", err)
