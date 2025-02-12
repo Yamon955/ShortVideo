@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"strconv"
 	"time"
 
 	"github.com/Yamon955/ShortVideo/comm/base"
@@ -12,6 +13,7 @@ import (
 	"github.com/Yamon955/ShortVideo/user/entity/errcode"
 	"github.com/Yamon955/ShortVideo/user/repo/mysql"
 	MySQL "github.com/go-sql-driver/mysql"
+	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 	"trpc.group/trpc-go/trpc-go/errs"
 	"trpc.group/trpc-go/trpc-go/log"
@@ -19,7 +21,8 @@ import (
 
 // handlerImpl 用户注册、登录处理器实现
 type handlerImpl struct {
-	db mysql.DBClient
+	db  mysql.DBClient
+	rdb *redis.Client
 }
 
 // HandleRegister 用户注册
@@ -32,12 +35,15 @@ func (h *handlerImpl) HandleRegister(ctx context.Context, req *pb.RegisterReq) e
 		return err
 	}
 	// 新建新用户插入数据库
-	if err := h.db.CreateUser(ctx, createUser(username, password)); err != nil {
+	newUser := createUser(username, password)
+	if err := h.db.CreateUser(ctx, newUser); err != nil {
 		if mysqlErr, ok := err.(*MySQL.MySQLError); ok && mysqlErr.Number == def.MySQLErrCode_UsernameIsDuplicate {
 			return errs.New(errcode.ErrUsernameIsUsed, "用户名已存在")
 		}
 		return errs.New(errcode.ErrDBOperation, "注册失败，请稍后重试！")
 	}
+	// 创建必要的键值
+	h.createUserRedisKey(ctx, newUser)
 	return nil
 }
 
@@ -93,4 +99,13 @@ func createUser(username string, pwd string) *base.User {
 		Sign:         conf.AppConf.UserDefaultConf.Sign,
 		RegisterTime: time.Now().Unix(),
 	}
+}
+
+// createUserRedisKey redis 中创建用户相关的键
+func (h *handlerImpl) createUserRedisKey(ctx context.Context, user *base.User) {
+	uid := strconv.FormatUint(user.ID, 10)
+	// 创建 bitmap TAG:UID:uid 存储用户标签
+	_ = h.rdb.Set(ctx, def.UserTagKeyPrefix+uid, 0, -1)
+	// 创建用户布隆过滤器 uid_BloomFilter_1
+	_ = h.rdb.BFReserve(ctx, uid+def.BloomFilter1Keysuffix, def.BloomFilterErrRate, def.BloomFilterCapacity)
 }

@@ -6,6 +6,7 @@ import (
 
 	"github.com/Yamon955/ShortVideo/protocol/user/pb"
 	"github.com/Yamon955/ShortVideo/user/repo/mysql"
+	"github.com/Yamon955/ShortVideo/user/repo/redis"
 )
 
 // Handler 用户注册、登录处理器
@@ -19,6 +20,7 @@ type Handler interface {
 // NewHandler 创建一个用户注册、登录的处理器
 func NewHandler() Handler {
 	return &handlerImpl{
-		db: mysql.NewDBClient(),
+		db:  mysql.NewDBClient(),
+		rdb: redis.GetClient(),
 	}
 }

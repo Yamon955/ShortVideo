@@ -7,14 +7,17 @@ require (
 	github.com/Yamon955/ShortVideo/comm v0.0.0-20250207093249-0ee3e06fc441
 	github.com/Yamon955/ShortVideo/protocol v0.0.0-20250108090952-e3b501a7db19
 	github.com/go-sql-driver/mysql v1.7.0
+	github.com/redis/go-redis/v9 v9.7.0
 	github.com/stretchr/testify v1.10.0
 	gorm.io/driver/mysql v1.5.7
 	trpc.group/trpc-go/trpc-go v1.0.3
 )
 
 require (
+	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/go-playground/form/v4 v4.2.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect

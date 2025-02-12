@@ -30,7 +30,12 @@ func (v *videoSvrImpl) Publish(ctx context.Context, req *pb.PublishReq) (*pb.Pub
 
 // GetFeeds 获取推荐视频列表
 func (v *videoSvrImpl) GetFeeds(ctx context.Context, req *pb.GetFeedsReq) (*pb.GetFeedsRsp, error) {
-	return &pb.GetFeedsRsp{}, nil
+	rsp, err := v.handler.HandleGetFeeds(ctx, req)
+	if err != nil {
+		log.ErrorContextf(ctx, "HandleGetFeeds failed, err:%v", err)
+		return nil, err
+	}
+	return rsp, nil
 }
 
 // GetPublishList 获取用户发布列表

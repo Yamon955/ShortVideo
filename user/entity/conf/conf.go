@@ -10,6 +10,7 @@ import (
 type AppConfig struct {
 	UserDefaultConf UserDefaultConfig `mapstructure:"user_default_conf"`
 	MySQLConf       MySQLConfig       `mapstructure:"mysql"`
+	RedisConf       RedisConf         `mapstructure:"redis"`
 }
 
 type UserDefaultConfig struct {
@@ -27,7 +28,19 @@ type MySQLConfig struct {
 	MaxIdleConns int    `mapstructure:"max_idle_conns"`
 }
 
+type RedisConf struct {
+	Address  string `mapstructure:"address"`
+	Port     string `mapstructure:"port"`
+	Password string `mapstructure:"password"`
+	DB       int    `mapstructure:"db"`
+}
+
 var AppConf *AppConfig
+
+// GetAppConfig 获取 APP 配置对象
+func GetAppConfig() *AppConfig {
+	return AppConf
+}
 
 func Init() error {
 	viper.SetConfigFile("./conf/app_config.yaml")

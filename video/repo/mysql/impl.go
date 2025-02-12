@@ -33,3 +33,25 @@ func (d *dbClient) SelectUserPublishVideos(ctx context.Context, id uint64, uid u
 	}
 	return videos, nil
 }
+
+// SelectVideosByVids 通过 vids 批量查询对应视频信息
+func (d *dbClient) SelectVideosByVids(ctx context.Context, vids []uint64) ([]*base.Video, error) {
+	videoInfos := make([]*base.Video, 0, len(vids))
+	res := d.client.Where("vid IN ?", vids).Find(&videoInfos)
+	if err := res.Error; err != nil {
+		log.ErrorContextf(ctx, "SelectVideosByVids failed, err:%v", err)
+		return nil, err
+	}
+	return videoInfos, nil
+}
+
+// SelectVideoByVid 通过 vid 查询对应视频信息
+func (d *dbClient) SelectVideoByVid(ctx context.Context, vids []uint64) (*base.Video, error) {
+	videoInfo := new(base.Video)
+	res := d.client.Where("vid IN ?", vids).Find(&videoInfo)
+	if err := res.Error; err != nil {
+		log.ErrorContextf(ctx, "SelectVideosByVids failed, err:%v", err)
+		return nil, err
+	}
+	return videoInfo, nil
+}

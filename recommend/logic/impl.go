@@ -7,6 +7,7 @@ import (
 	"github.com/Yamon955/ShortVideo/protocol/recommend/pb"
 	"github.com/Yamon955/ShortVideo/recommend/entity/def"
 	"github.com/redis/go-redis/v9"
+	"trpc.group/trpc-go/trpc-go/log"
 )
 
 type handlerImpl struct {
@@ -30,11 +31,11 @@ func (h *handlerImpl) HandleFeedsRecommend(
 		// 更新下一次查询的起始索引位置
 		startIndex = endIndex + 1
 		// 布隆过滤器去除用户已经看过的视频
-		bfKey := def.BloomFilter1Keysuffix + strconv.FormatUint(req.Uid, 10)
-		exists := h.rdb.BFMExists(ctx, bfKey, vids).Val()
+		bfKey := strconv.FormatUint(req.Uid, 10) + def.BloomFilter1Keysuffix
 		vidsAfterFilter := make([]string, 0, 10)
-		for i, vid := range vids {
-			if !exists[i] {
+		for _, vid := range vids {
+			exist := h.rdb.BFExists(ctx, bfKey, vid).Val()
+			if !exist {
 				vidsAfterFilter = append(vidsAfterFilter, vid)
 			}
 		}
@@ -45,11 +46,12 @@ func (h *handlerImpl) HandleFeedsRecommend(
 			// 标签值匹配
 			val := h.rdb.BitOpAnd(ctx, vidTagKey, uidTagKey).Val()
 			if val >= 0 {
-				recommendedVid, _ := strconv.ParseUint(vid, 10, 8)
+				recommendedVid, _ := strconv.ParseUint(vid, 10, 64)
 				recommendedVids = append(recommendedVids, recommendedVid)
 			}
 		}
 	}
+	log.Infof("recommendedVids:%v", recommendedVids)
 	return &pb.FeedsRecommendRsp{
 		Vids:      recommendedVids,
 		NextIndex: startIndex,
