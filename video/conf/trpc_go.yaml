@@ -15,6 +15,14 @@ server:
       timeout: 2000000
       port: 30002
 
+client:
+  service:
+    - callee: trpc.shortvideo.recommend.Recommend
+      name: trpc.shortvideo.recommend.Recommend
+      network: tcp
+      protocol: trpc
+      target: ip://127.0.0.1:40001
+
 plugins:
   log:
     default:

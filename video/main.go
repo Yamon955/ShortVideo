@@ -12,6 +12,7 @@ import (
 	"github.com/Yamon955/ShortVideo/video/repo/redis"
 	"trpc.group/trpc-go/trpc-go"
 	"trpc.group/trpc-go/trpc-go/codec"
+	"trpc.group/trpc-go/trpc-go/log"
 )
 
 func init() {
@@ -51,5 +52,6 @@ func main() {
 func getMachineID() uint16 {
 	machineID := redis.GetClient().Incr(context.Background(), def.MachineID).Val()
 	machineID %= 1024
+	log.Infof("MachineID:%d", machineID)
 	return uint16(machineID)
 }

@@ -7,9 +7,12 @@ import (
 	"mime/multipart"
 	"strconv"
 
+	"github.com/Yamon955/ShortVideo/comm/base"
 	"github.com/Yamon955/ShortVideo/protocol/video/pb"
+	"github.com/Yamon955/ShortVideo/video/entity/def"
 	"github.com/Yamon955/ShortVideo/video/entity/errcode"
 	"github.com/Yamon955/ShortVideo/video/repo/uploader"
+	"github.com/redis/go-redis/v9"
 	"trpc.group/trpc-go/trpc-go"
 	"trpc.group/trpc-go/trpc-go/errs"
 	thttp "trpc.group/trpc-go/trpc-go/http"
@@ -43,10 +46,11 @@ func (h *handlerImpl) HandlePublish(ctx context.Context, req *pb.PublishReq) (*p
 	}
 	log.Infof("uid:%d, VideoUpload success. vid:%v", uid, videoInfo.VID)
 
-	// 计算视频标签值
+	// 计算视频标签值存储
 	var tag uint64
 	for _, tagValStr := range tags {
 		tagVal, _ := strconv.ParseInt(tagValStr, 10, 8)
+		// 计算视频标签值
 		tag |= 1 << tagVal
 	}
 	videoInfo.Tags = tag
@@ -56,6 +60,8 @@ func (h *handlerImpl) HandlePublish(ctx context.Context, req *pb.PublishReq) (*p
 		log.ErrorContextf(ctx, "Insert video failed, err:%v", err)
 		return nil, errs.New(errcode.ErrInsertVideo, "视频信息存储失败")
 	}
+	// 视频信息存到 redis
+	h.saveInfoToRedis(ctx, videoInfo, tags)
 
 	return &pb.PublishRsp{
 		StatusMsg: "上传成功",
@@ -88,4 +94,19 @@ func parseHTTPForm(ctx context.Context) ([]string, string, multipart.File, *mult
 		return nil, "", nil, nil, err
 	}
 	return tags, title, file, fileHeader, nil
+}
+
+// saveInfoToRedis 视频信息存储到 redis
+func (h *handlerImpl) saveInfoToRedis(ctx context.Context, videoInfo *base.Video, tags []string) {
+	redisTagKey := def.VideoTagKeyPrefix + strconv.FormatUint(videoInfo.VID, 10)
+	for _, tagValStr := range tags {
+		tagVal, _ := strconv.ParseInt(tagValStr, 10, 8)
+		// 使用 redis bitmap 存储视频 tag，对应位置置 1
+		h.RDB.SetBit(ctx, redisTagKey, tagVal, 1)
+	}
+	// 发布视频存到 redis zset 中，发布时间为 score
+	h.RDB.ZAdd(ctx, def.VideosInTwoMonthRedisKey, redis.Z{
+		Score:  float64(videoInfo.PublishTime),
+		Member: videoInfo.VID,
+	})
 }
