@@ -26,6 +26,8 @@ type VideoService interface {
 	GetLikeList(ctx context.Context, req *GetLikeListReq) (*GetLikeListRsp, error)
 
 	GetCollectList(ctx context.Context, req *GetCollectListReq) (*GetCollectListRsp, error)
+
+	WatchVideo(ctx context.Context, req *WatchVideoReq) (*WatchVideoRsp, error)
 }
 
 func VideoService_GetFeeds_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
@@ -100,6 +102,24 @@ func VideoService_GetCollectList_Handler(svr interface{}, ctx context.Context, f
 	return rsp, nil
 }
 
+func VideoService_WatchVideo_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &WatchVideoReq{}
+	filters, err := f(req)
+	if err != nil {
+		return nil, err
+	}
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(VideoService).WatchVideo(ctx, reqbody.(*WatchVideoReq))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc)
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
 // VideoServer_ServiceDesc descriptor for server.RegisterService.
 var VideoServer_ServiceDesc = server.ServiceDesc{
 	ServiceName: "trpc.shortvideo.video.Video",
@@ -120,6 +140,10 @@ var VideoServer_ServiceDesc = server.ServiceDesc{
 		{
 			Name: "/trpc.shortvideo.video.Video/GetCollectList",
 			Func: VideoService_GetCollectList_Handler,
+		},
+		{
+			Name: "/trpc.shortvideo.video.Video/WatchVideo",
+			Func: VideoService_WatchVideo_Handler,
 		},
 	},
 }
@@ -189,6 +213,9 @@ func (s *UnimplementedVideo) GetLikeList(ctx context.Context, req *GetLikeListRe
 func (s *UnimplementedVideo) GetCollectList(ctx context.Context, req *GetCollectListReq) (*GetCollectListRsp, error) {
 	return nil, errors.New("rpc GetCollectList of service Video is not implemented")
 }
+func (s *UnimplementedVideo) WatchVideo(ctx context.Context, req *WatchVideoReq) (*WatchVideoRsp, error) {
+	return nil, errors.New("rpc WatchVideo of service Video is not implemented")
+}
 
 type UnimplementedPublish struct{}
 
@@ -211,6 +238,8 @@ type VideoClientProxy interface {
 	GetLikeList(ctx context.Context, req *GetLikeListReq, opts ...client.Option) (rsp *GetLikeListRsp, err error)
 
 	GetCollectList(ctx context.Context, req *GetCollectListReq, opts ...client.Option) (rsp *GetCollectListRsp, err error)
+
+	WatchVideo(ctx context.Context, req *WatchVideoReq, opts ...client.Option) (rsp *WatchVideoRsp, err error)
 }
 
 type VideoClientProxyImpl struct {
@@ -296,6 +325,26 @@ func (c *VideoClientProxyImpl) GetCollectList(ctx context.Context, req *GetColle
 	callopts = append(callopts, c.opts...)
 	callopts = append(callopts, opts...)
 	rsp := &GetCollectListRsp{}
+	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+
+func (c *VideoClientProxyImpl) WatchVideo(ctx context.Context, req *WatchVideoReq, opts ...client.Option) (*WatchVideoRsp, error) {
+	ctx, msg := codec.WithCloneMessage(ctx)
+	defer codec.PutBackMessage(msg)
+	msg.WithClientRPCName("/trpc.shortvideo.video.Video/WatchVideo")
+	msg.WithCalleeServiceName(VideoServer_ServiceDesc.ServiceName)
+	msg.WithCalleeApp("shortvideo")
+	msg.WithCalleeServer("video")
+	msg.WithCalleeService("Video")
+	msg.WithCalleeMethod("WatchVideo")
+	msg.WithSerializationType(codec.SerializationTypePB)
+	callopts := make([]client.Option, 0, len(c.opts)+len(opts))
+	callopts = append(callopts, c.opts...)
+	callopts = append(callopts, opts...)
+	rsp := &WatchVideoRsp{}
 	if err := c.client.Invoke(ctx, req, rsp, callopts...); err != nil {
 		return nil, err
 	}
