@@ -23,6 +23,7 @@ service Video {
     rpc GetPublishList(GetPublishListReq) returns (GetPublishListRsp);
     rpc GetLikeList(GetLikeListReq) returns (GetLikeListRsp);
     rpc GetCollectList(GetCollectListReq) returns (GetCollectListRsp);
+    rpc WatchVideo(WatchVideoReq) returns (WatchVideoRsp);
 
 }
 
@@ -58,8 +59,6 @@ message GetFeedsRsp {
 }
 
 message PublishReq {
-    
-
 }
 message PublishRsp {
     int64 status_code = 1;
@@ -92,5 +91,11 @@ message GetCollectListRsp {
     uint64 next_id = 1;
     bool is_finash = 2;
     repeated VideoInfo video_infos = 3;
+}
+
+message WatchVideoReq {
+    uint64 vid = 1;
+}
+message WatchVideoRsp {
 }
 
