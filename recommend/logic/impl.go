@@ -7,6 +7,7 @@ import (
 	"github.com/Yamon955/ShortVideo/protocol/recommend/pb"
 	"github.com/Yamon955/ShortVideo/recommend/entity/def"
 	"github.com/redis/go-redis/v9"
+	"trpc.group/trpc-go/trpc-go"
 	"trpc.group/trpc-go/trpc-go/log"
 )
 
@@ -31,14 +32,8 @@ func (h *handlerImpl) HandleFeedsRecommend(
 		// 更新下一次查询的起始索引位置
 		startIndex = endIndex + 1
 		// 布隆过滤器去除用户已经看过的视频
-		bfKey := strconv.FormatUint(req.Uid, 10) + def.BloomFilter1Keysuffix
-		vidsAfterFilter := make([]string, 0, 10)
-		for _, vid := range vids {
-			exist := h.rdb.BFExists(ctx, bfKey, vid).Val()
-			if !exist {
-				vidsAfterFilter = append(vidsAfterFilter, vid)
-			}
-		}
+		uid := strconv.FormatUint(req.Uid, 10)
+		vidsAfterFilter := h.duplicateVidByBloomFilter(ctx, uid, vids)
 		// 标签值匹配筛选用户
 		for _, vid := range vidsAfterFilter {
 			vidTagKey := def.VideoTagKeyPrefix + vid
@@ -56,4 +51,32 @@ func (h *handlerImpl) HandleFeedsRecommend(
 		Vids:      recommendedVids,
 		NextIndex: startIndex,
 	}, nil
+}
+
+// duplicateVidByBloomFilter 利用两个布隆过滤器去重
+func (h *handlerImpl) duplicateVidByBloomFilter(ctx context.Context, uid string, vids []string) []string {
+	var handlers []func() error
+	var exists1, exists2 []bool
+	// 布隆过滤器去除用户已经看过的视频, 两个都要判断
+	bfKey1 := uid + def.BloomFilter1Keysuffix
+	bfKey2 := uid + def.BloomFilter2Keysuffix
+	handlers = append(handlers, func() error {
+		exists1 = h.rdb.BFMExists(ctx, bfKey1, vids).Val()
+		return nil
+	})
+	handlers = append(handlers, func() error {
+		exists2 = h.rdb.BFMExists(ctx, bfKey2, vids).Val()
+		return nil
+	})
+	_ = trpc.GoAndWait(handlers...)
+
+	vidsAfterFilter := make([]string, 0, len(vids))
+	for i, vid := range vids {
+		// 只要可能在其中一个里面，就表示用户已经刷到过，去重
+		if exists1[i] || exists2[i] {
+			continue
+		}
+		vidsAfterFilter = append(vidsAfterFilter, vid)
+	}
+	return vidsAfterFilter
 }

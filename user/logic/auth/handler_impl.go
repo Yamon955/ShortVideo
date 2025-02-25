@@ -101,11 +101,14 @@ func createUser(username string, pwd string) *base.User {
 	}
 }
 
-// createUserRedisKey redis 中创建用户相关的键
+// createUserRedisKey redis 中创建用户相关的存储
 func (h *handlerImpl) createUserRedisKey(ctx context.Context, user *base.User) {
 	uid := strconv.FormatUint(user.ID, 10)
 	// 创建 bitmap TAG:UID:uid 存储用户标签
 	_ = h.rdb.Set(ctx, def.UserTagKeyPrefix+uid, 0, -1)
-	// 创建用户布隆过滤器 uid_BloomFilter_1
+	// 创建用户布隆过滤器 uid_BloomFilter_1 and uid_BloomFilter_2
 	_ = h.rdb.BFReserve(ctx, uid+def.BloomFilter1Keysuffix, def.BloomFilterErrRate, def.BloomFilterCapacity)
+	_ = h.rdb.BFReserve(ctx, uid+def.BloomFilter2Keysuffix, def.BloomFilterErrRate, def.BloomFilterCapacity)
+	// 创建 current:bloomfilter:uid 存储 uid 当前正在使用的 布隆过滤器，默认首次使用 uid_BloomFilter_1
+	_ = h.rdb.Set(ctx, def.UserCurrentBloomFilterPrefix+uid, uid+def.BloomFilter1Keysuffix, -1)
 }

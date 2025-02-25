@@ -18,18 +18,20 @@ type Handler interface {
 	HandleGetFeeds(ctx context.Context, req *pb.GetFeedsReq) (*pb.GetFeedsRsp, error)
 	// HandleGetPublishList 分页获取用户发布列表
 	HandleGetPublishList(ctx context.Context, req *pb.GetPublishListReq) (*pb.GetPublishListRsp, error)
+	// HandleWatchVideo 处理用户观看的 video，加入到布隆过滤器设置为已观看
+	HandleWatchVideo(ctx context.Context, req *pb.WatchVideoReq) (*pb.WatchVideoRsp, error)
 }
 
 func NewHandler() Handler {
 	return &handlerImpl{
-		Uploader: uploader.NewMediaFileUploader(),
-		DB:       mysql.NewDBClient(),
-		RDB:      MyRedis.GetClient(),
+		uploader: uploader.NewMediaFileUploader(),
+		db:       mysql.NewDBClient(),
+		rdb:      MyRedis.GetClient(),
 	}
 }
 
 type handlerImpl struct {
-	Uploader uploader.MediaFileUploader
-	DB       mysql.DBClient
-	RDB      *redis.Client
+	uploader uploader.MediaFileUploader
+	db       mysql.DBClient
+	rdb      *redis.Client
 }

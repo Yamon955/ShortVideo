@@ -4,7 +4,7 @@ go 1.23.2
 
 require (
 	github.com/Yamon955/ShortVideo/comm v0.0.0-20250211115206-0cc1bc00a151
-	github.com/Yamon955/ShortVideo/protocol v0.0.0-20250211115206-0cc1bc00a151
+	github.com/Yamon955/ShortVideo/protocol v0.0.0-20250220084119-d9a8eb8e9b5d
 	github.com/minio/minio-go/v7 v7.0.84
 	github.com/redis/go-redis/v9 v9.7.0
 	github.com/spf13/viper v1.19.0

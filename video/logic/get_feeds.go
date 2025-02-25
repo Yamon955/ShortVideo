@@ -27,7 +27,7 @@ func (h *handlerImpl) HandleGetFeeds(ctx context.Context, req *pb.GetFeedsReq) (
 	}
 	// 获取视频信息
 	log.Infof("recommendRsp %+v", recommendRsp.GetVids())
-	vidInfos, err := h.DB.SelectVideosByVids(ctx, recommendRsp.GetVids())
+	vidInfos, err := h.db.SelectVideosByVids(ctx, recommendRsp.GetVids())
 	log.Infof("vidInfos %+v", vidInfos)
 	if err != nil {
 		log.ErrorContextf(ctx, "SelectVideosByVids failed, err:%v", err)

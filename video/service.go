@@ -59,3 +59,13 @@ func (v *videoSvrImpl) GetCollectList(ctx context.Context, req *pb.GetCollectLis
 
 	return &pb.GetCollectListRsp{}, nil
 }
+
+// WatchVideo 记录用户已观看的视频
+func (v *videoSvrImpl) WatchVideo(ctx context.Context, req *pb.WatchVideoReq) (*pb.WatchVideoRsp, error) {
+	rsp, err := v.handler.HandleWatchVideo(ctx, req)
+	if err != nil {
+		log.ErrorContextf(ctx, "HandleWatchVideo failed, err:%v", err)
+		return nil, err
+	}
+	return rsp, nil
+}
