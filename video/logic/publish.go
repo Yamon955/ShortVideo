@@ -39,7 +39,7 @@ func (h *handlerImpl) HandlePublish(ctx context.Context, req *pb.PublishReq) (*p
 		File:  file,
 		Title: title,
 	}
-	videoInfo, err := h.Uploader.VideoUpload(ctx, uploadReq)
+	videoInfo, err := h.uploader.VideoUpload(ctx, uploadReq)
 	if err != nil {
 		log.ErrorContextf(ctx, "VideoUpload failed, err:%v", err)
 		return nil, errs.New(errcode.ErrPublishFailed, "上传失败,请稍后重试!")
@@ -55,7 +55,7 @@ func (h *handlerImpl) HandlePublish(ctx context.Context, req *pb.PublishReq) (*p
 	}
 	videoInfo.Tags = tag
 	// 视频信息存储到视频表中
-	err = h.DB.InsertVideo(ctx, videoInfo)
+	err = h.db.InsertVideo(ctx, videoInfo)
 	if err != nil {
 		log.ErrorContextf(ctx, "Insert video failed, err:%v", err)
 		return nil, errs.New(errcode.ErrInsertVideo, "视频信息存储失败")
@@ -102,10 +102,10 @@ func (h *handlerImpl) saveInfoToRedis(ctx context.Context, videoInfo *base.Video
 	for _, tagValStr := range tags {
 		tagVal, _ := strconv.ParseInt(tagValStr, 10, 8)
 		// 使用 redis bitmap 存储视频 tag，对应位置置 1
-		h.RDB.SetBit(ctx, redisTagKey, tagVal, 1)
+		h.rdb.SetBit(ctx, redisTagKey, tagVal, 1)
 	}
 	// 发布视频存到 redis zset 中，发布时间为 score
-	h.RDB.ZAdd(ctx, def.VideosInTwoMonthRedisKey, redis.Z{
+	h.rdb.ZAdd(ctx, def.VideosInTwoMonthRedisKey, redis.Z{
 		Score:  float64(videoInfo.PublishTime),
 		Member: videoInfo.VID,
 	})

@@ -20,7 +20,7 @@ func (h *handlerImpl) HandleGetPublishList(
 		return nil, errs.New(errcode.ErrInvalidStartID, "invalid start_id")
 	}
 	uid, _ := strconv.ParseUint(string(trpc.GetMetaData(ctx, "sv_login_uid")), 10, 64)
-	videos, err := h.DB.SelectUserPublishVideos(ctx, req.GetStartId(), uid)
+	videos, err := h.db.SelectUserPublishVideos(ctx, req.GetStartId(), uid)
 	if err != nil {
 		return nil, errs.New(errcode.ErrDBOperation, "db operation failed")
 	}
