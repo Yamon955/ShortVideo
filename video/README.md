@@ -130,19 +130,17 @@ sectionReader := io.NewSectionReader(file, start, partSize)
 ## Video--基础视频服务
 
 ### 1. GetFeeds
+获取推荐视频
 
 ### 2. GetPublishList
-
 索引配合分页查询，每次查询返回10条数据，同时返回下一次开始查询的偏移量
 
 `videos` 增加了自增主键 id 用于实现分页查询效果
-
 ```sql
 select * from videos id > ? and uid = ? limit 10;
 ```
 
 根据查询语句建立 (id, uid) 的联合索引，时查询更高效
-
 ```sql
 CREATE INDEX idx_id_uid ON videos(id, uid);
 ```
