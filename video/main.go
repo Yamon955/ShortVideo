@@ -48,7 +48,7 @@ func main() {
 	}
 }
 
-// getMachineID 获取机器 ID 用于雪花算法生成 uuid，使用 redis 的 incy 函数保证机器 id 不同
+// getMachineID 获取机器 ID 用于雪花算法生成 uuid，使用 redis 的 incr 函数保证机器 id 不同
 func getMachineID() uint16 {
 	machineID := redis.GetClient().Incr(context.Background(), def.MachineID).Val()
 	machineID %= 1024
