@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>短视频 - ShortVideo</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 侧边导航栏 -->
+    <nav class="sidebar">
+        <div class="logo">
+            <i class="fas fa-play-circle"></i>
+            <span>短视频</span>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item active" data-page="home">
+                <i class="fas fa-home"></i>
+                <span>首页</span>
+            </li>
+            <li class="nav-item" data-page="discover">
+                <i class="fas fa-compass"></i>
+                <span>发现</span>
+            </li>
+            <li class="nav-item" data-page="upload">
+                <i class="fas fa-plus-circle"></i>
+                <span>发布</span>
+            </li>
+            <li class="nav-item" data-page="profile">
+                <i class="fas fa-user"></i>
+                <span>我的</span>
+            </li>
+        </ul>
+        <div class="user-section" id="userSection">
+            <button class="btn-login" id="btnShowLogin">登录</button>
+        </div>
+    </nav>
+
+    <!-- 主内容区域 -->
+    <main class="main-content">
+        <!-- 首页 - 视频流 -->
+        <section class="page active" id="homePage">
+            <div class="video-container" id="videoContainer">
+                <!-- 视频列表将由JS动态生成 -->
+            </div>
+            <div class="video-controls">
+                <button class="btn-scroll" id="btnPrevVideo">
+                    <i class="fas fa-chevron-up"></i>
+                </button>
+                <button class="btn-scroll" id="btnNextVideo">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- 发现页 -->
+        <section class="page" id="discoverPage">
+            <div class="discover-header">
+                <h2>发现精彩</h2>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="搜索视频、用户..." id="searchInput">
+                </div>
+            </div>
+            <div class="tags-container">
+                <button class="tag-btn active" data-tag="0">娱乐</button>
+                <button class="tag-btn" data-tag="1">商业</button>
+                <button class="tag-btn" data-tag="2">音乐</button>
+                <button class="tag-btn" data-tag="3">生活</button>
+                <button class="tag-btn" data-tag="4">教育</button>
+                <button class="tag-btn" data-tag="5">科技</button>
+                <button class="tag-btn" data-tag="6">时尚</button>
+                <button class="tag-btn" data-tag="7">运动</button>
+                <button class="tag-btn" data-tag="8">汽车</button>
+                <button class="tag-btn" data-tag="9">艺术</button>
+                <button class="tag-btn" data-tag="10">新闻</button>
+                <button class="tag-btn" data-tag="11">游戏</button>
+                <button class="tag-btn" data-tag="12">健康</button>
+                <button class="tag-btn" data-tag="13">DIY</button>
+                <button class="tag-btn" data-tag="14">文化</button>
+            </div>
+            <div class="video-grid" id="discoverGrid">
+                <!-- 视频卡片将由JS动态生成 -->
+            </div>
+        </section>
+
+        <!-- 上传页 -->
+        <section class="page" id="uploadPage">
+            <div class="upload-container">
+                <h2>发布视频</h2>
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="upload-area" id="uploadArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>点击或拖拽视频文件到此处</p>
+                        <p class="hint">支持 MP4, WebM, AVI 格式，最大 500MB</p>
+                        <input type="file" id="videoFile" name="video" accept="video/*" hidden>
+                    </div>
+                    <div class="preview-area" id="previewArea" style="display: none;">
+                        <video id="videoPreview" controls></video>
+                        <button type="button" class="btn-remove" id="btnRemoveVideo">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label for="videoTitle">视频标题</label>
+                        <input type="text" id="videoTitle" name="title" placeholder="给视频起个标题吧" maxlength="100">
+                        <span class="char-count"><span id="titleCount">0</span>/100</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="coverFile">封面图片</label>
+                        <div class="cover-upload" id="coverUploadArea">
+                            <i class="fas fa-image"></i>
+                            <p>点击上传封面</p>
+                            <input type="file" id="coverFile" name="cover" accept="image/*" hidden>
+                        </div>
+                        <div class="cover-preview" id="coverPreview" style="display: none;">
+                            <img id="coverImg" src="" alt="封面预览">
+                            <button type="button" class="btn-remove" id="btnRemoveCover">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>视频分类</label>
+                        <div class="tag-selector">
+                            <label class="tag-option">
+                                <input type="radio" name="tags" value="0" checked>
+                                <span>娱乐</span>
+                            </label>
+                            <label class="tag-option">
+                                <input type="radio" name="tags" value="1">
+                                <span>商业</span>
+                            </label>
+                            <label class="tag-option">
+                                <input type="radio" name="tags" value="2">
+                                <span>音乐</span>
+                            </label>
+                            <label class="tag-option">
+                                <input type="radio" name="tags" value="3">
+                                <span>生活</span>
+                            </label>
+                            <label class="tag-option">
+                                <input type="radio" name="tags" value="4">
+                                <span>教育</span>
+                            </label>
+                            <label class="tag-option">
+                                <input type="radio" name="tags" value="5">
+                                <span>科技</span>
+                            </label>
+                            <label class="tag-option">
+                                <input type="radio" name="tags" value="6">
+                                <span>时尚</span>
+                            </label>
+                            <label class="tag-option">
+                                <input type="radio" name="tags" value="7">
+                                <span>运动</span>
+                            </label>
+                            <label class="tag-option">
+                                <input type="radio" name="tags" value="8">
+                                <span>汽车</span>
+                            </label>
+                            <label class="tag-option">
+                                <input type="radio" name="tags" value="9">
+                                <span>艺术</span>
+                            </label>
+                            <label class="tag-option">
+                                <input type="radio" name="tags" value="10">
+                                <span>新闻</span>
+                            </label>
+                            <label class="tag-option">
+                                <input type="radio" name="tags" value="11">
+                                <span>游戏</span>
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-publish" id="btnPublish">
+                        <i class="fas fa-paper-plane"></i>
+                        发布视频
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 个人中心页 -->
+        <section class="page" id="profilePage">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <div class="avatar-wrapper">
+<img src="static/images/default-avatar.svg" alt="头像" id="userAvatar">
+                        <button class="btn-edit-avatar" id="btnEditAvatar">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                        <input type="file" id="avatarFile" accept="image/*" hidden>
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="userName">请登录</h2>
+                        <p class="user-sign" id="userSign">这个人很懒，什么都没写</p>
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <span class="stat-value" id="fansCount">0</span>
+                                <span class="stat-label">粉丝</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="followsCount">0</span>
+                                <span class="stat-label">关注</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="publishCount">0</span>
+                                <span class="stat-label">作品</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="likedCount">0</span>
+                                <span class="stat-label">获赞</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-edit-profile" id="btnEditProfile">
+                        <i class="fas fa-edit"></i>
+                        编辑资料
+                    </button>
+                </div>
+                <div class="profile-tabs">
+                    <button class="tab-btn active" data-tab="works">
+                        <i class="fas fa-video"></i>
+                        作品 <span id="worksTabCount">0</span>
+                    </button>
+                    <button class="tab-btn" data-tab="liked">
+                        <i class="fas fa-heart"></i>
+                        喜欢 <span id="likedTabCount">0</span>
+                    </button>
+                    <button class="tab-btn" data-tab="collected">
+                        <i class="fas fa-star"></i>
+                        收藏 <span id="collectedTabCount">0</span>
+                    </button>
+                </div>
+                <div class="tab-content active" id="worksContent">
+                    <div class="video-grid" id="worksGrid">
+                        <!-- 用户作品列表 -->
+                    </div>
+                </div>
+                <div class="tab-content" id="likedContent">
+                    <div class="video-grid" id="likedGrid">
+                        <!-- 用户喜欢的视频 -->
+                    </div>
+                </div>
+                <div class="tab-content" id="collectedContent">
+                    <div class="video-grid" id="collectedGrid">
+                        <!-- 用户收藏的视频 -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 登录弹窗 -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <button class="btn-close" id="btnCloseLogin">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h2 id="authTitle">登录</h2>
+            </div>
+            <form id="authForm">
+                <div class="form-group">
+                    <label for="authUsername">用户名</label>
+                    <input type="text" id="authUsername" placeholder="请输入用户名" required>
+                </div>
+                <div class="form-group">
+                    <label for="authPassword">密码</label>
+                    <input type="password" id="authPassword" placeholder="请输入密码" required>
+                </div>
+                <div class="form-group" id="confirmPasswordGroup" style="display: none;">
+                    <label for="authConfirmPassword">确认密码</label>
+                    <input type="password" id="authConfirmPassword" placeholder="请再次输入密码">
+                </div>
+                <button type="submit" class="btn-submit" id="btnSubmitAuth">登录</button>
+            </form>
+            <div class="auth-switch">
+                <span id="authSwitchText">还没有账号？</span>
+                <a href="#" id="authSwitchLink">立即注册</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑资料弹窗 -->
+    <div class="modal" id="editProfileModal">
+        <div class="modal-content">
+            <button class="btn-close" id="btnCloseEditProfile">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h2>编辑资料</h2>
+            </div>
+            <form id="editProfileForm">
+                <div class="form-group">
+                    <label for="editUsername">用户名</label>
+                    <input type="text" id="editUsername" placeholder="请输入用户名" maxlength="20">
+                </div>
+                <div class="form-group">
+                    <label for="editSign">个性签名</label>
+                    <textarea id="editSign" placeholder="介绍一下自己吧" maxlength="200"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>性别</label>
+                    <div class="gender-selector">
+                        <label class="gender-option">
+                            <input type="radio" name="gender" value="0" checked>
+                            <span>保密</span>
+                        </label>
+                        <label class="gender-option">
+                            <input type="radio" name="gender" value="1">
+                            <span>男</span>
+                        </label>
+                        <label class="gender-option">
+                            <input type="radio" name="gender" value="2">
+                            <span>女</span>
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit">保存</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 视频详情弹窗 -->
+    <div class="modal video-modal" id="videoDetailModal">
+        <div class="video-detail-content">
+            <button class="btn-close" id="btnCloseVideoDetail">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="video-player-wrapper">
+                <video id="detailVideo" controls autoplay loop></video>
+            </div>
+            <div class="video-info-panel">
+                <div class="author-info">
+                    <img src="" alt="作者头像" id="authorAvatar">
+                    <div class="author-details">
+                        <span class="author-name" id="authorName"></span>
+                        <span class="publish-time" id="publishTime"></span>
+                    </div>
+                    <button class="btn-follow" id="btnFollow">
+                        <i class="fas fa-plus"></i>
+                        关注
+                    </button>
+                </div>
+                <h3 id="videoTitle2"></h3>
+                <div class="interaction-bar">
+                    <button class="interaction-btn" id="btnLike">
+                        <i class="far fa-heart"></i>
+                        <span id="likeCount">0</span>
+                    </button>
+                    <button class="interaction-btn" id="btnCollect">
+                        <i class="far fa-star"></i>
+                        <span id="collectCount">0</span>
+                    </button>
+                    <button class="interaction-btn" id="btnComment">
+                        <i class="far fa-comment"></i>
+                        <span id="commentCount">0</span>
+                    </button>
+                    <button class="interaction-btn" id="btnShare">
+                        <i class="fas fa-share"></i>
+                        分享
+                    </button>
+                    <button class="interaction-btn btn-report" id="btnReport">
+                        <i class="fas fa-flag"></i>
+                        举报
+                    </button>
+                </div>
+                <div class="comments-section">
+                    <h4>评论</h4>
+                    <div class="comment-input">
+                        <input type="text" placeholder="写下你的评论..." id="commentInput">
+                        <button id="btnSendComment">发送</button>
+                    </div>
+                    <div class="comments-list" id="commentsList">
+                        <!-- 评论列表 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 举报弹窗 -->
+    <div class="modal" id="reportModal">
+        <div class="modal-content">
+            <button class="btn-close" id="btnCloseReport">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h2>举报视频</h2>
+            </div>
+            <form id="reportForm">
+                <div class="form-group">
+                    <label>举报原因（可多选）</label>
+                    <div class="report-options">
+                        <label class="report-option">
+                            <input type="checkbox" name="reportType" value="1">
+                            <span>暴力行为</span>
+                        </label>
+                        <label class="report-option">
+                            <input type="checkbox" name="reportType" value="2">
+                            <span>恐怖主义</span>
+                        </label>
+                        <label class="report-option">
+                            <input type="checkbox" name="reportType" value="3">
+                            <span>歧视性内容</span>
+                        </label>
+                        <label class="report-option">
+                            <input type="checkbox" name="reportType" value="4">
+                            <span>色情内容</span>
+                        </label>
+                        <label class="report-option">
+                            <input type="checkbox" name="reportType" value="5">
+                            <span>虚假信息</span>
+                        </label>
+                        <label class="report-option">
+                            <input type="checkbox" name="reportType" value="6">
+                            <span>版权侵权</span>
+                        </label>
+                        <label class="report-option">
+                            <input type="checkbox" name="reportType" value="7">
+                            <span>未成年安全</span>
+                        </label>
+                        <label class="report-option">
+                            <input type="checkbox" name="reportType" value="8">
+                            <span>虐待动物</span>
+                        </label>
+                        <label class="report-option">
+                            <input type="checkbox" name="reportType" value="9">
+                            <span>侵犯隐私</span>
+                        </label>
+                        <label class="report-option">
+                            <input type="checkbox" name="reportType" value="10">
+                            <span>引人不适</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="reportDescription">补充说明</label>
+                    <textarea id="reportDescription" placeholder="请描述具体情况..."></textarea>
+                </div>
+                <button type="submit" class="btn-submit">提交举报</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast 提示 -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage"></span>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <script src="static/js/api.js"></script>
+    <script src="static/js/app.js"></script>
+</body>
+</html>
